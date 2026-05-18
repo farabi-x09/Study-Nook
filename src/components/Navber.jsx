@@ -14,22 +14,22 @@ const Navber = ({ isAuthenticated = false, user = { name: "Alex M.", initial: "A
 
   const getLinkClass = (path) => {
     const base = "px-4 py-2 rounded-lg transition-colors";
-    return pathname === path 
-      ? `${base} bg-[#FEF3C7] text-[#B45309]` 
+    return pathname === path
+      ? `${base} bg-[#FEF3C7] text-[#B45309]`
       : `${base} text-gray-600 hover:bg-gray-100`;
   };
 
   const getMobileLinkClass = (path) => {
     const base = "block px-4 py-3 rounded-xl transition-colors";
-    return pathname === path 
-      ? `${base} bg-[#FEF3C7] text-[#B45309]` 
+    return pathname === path
+      ? `${base} bg-[#FEF3C7] text-[#B45309]`
       : `${base} text-gray-600 hover:bg-gray-50`;
   };
 
   return (
     <nav className="bg-white border border-yellow-200 shadow-sm rounded-2xl px-4 lg:px-6 py-3 w-11/12 max-w-7xl mx-auto my-4 sticky top-4 z-50 font-sans">
       <div className="flex justify-between items-center w-full">
-        
+
         {/* Logo Section */}
         <div className="flex gap-2.5 items-center">
           <div className="bg-[#E58B19] rounded-xl p-2 flex justify-center items-center text-white shadow-sm">
@@ -52,6 +52,17 @@ const Navber = ({ isAuthenticated = false, user = { name: "Alex M.", initial: "A
               Rooms
             </Link>
           </li>
+
+          {/* add tre romm for cheak */}
+
+          <li>
+            <Link href="/add-room" className={getMobileLinkClass("/add-room")} onClick={toggleMenu}>
+              Add Room
+            </Link>
+          </li>
+
+
+          {/* end */}
           {isAuthenticated && (
             <>
               <li>
@@ -91,7 +102,7 @@ const Navber = ({ isAuthenticated = false, user = { name: "Alex M.", initial: "A
             </div>
           ) : (
             <div className="relative">
-              <button 
+              <button
                 onClick={toggleDropdown}
                 className="flex items-center gap-2 border border-gray-200 py-1 px-3 pr-2 rounded-full bg-white hover:bg-gray-50 hover:border-gray-300 transition-all"
               >
@@ -124,7 +135,7 @@ const Navber = ({ isAuthenticated = false, user = { name: "Alex M.", initial: "A
         {/* Mobile Menu Toggle Button */}
         <div className="md:hidden flex items-center gap-2">
           <button className="w-10 h-10 flex items-center justify-center border border-gray-200 rounded-xl text-gray-400 hover:bg-gray-50 transition-colors">
-             <Square size={18} strokeWidth={2} />
+            <Square size={18} strokeWidth={2} />
           </button>
           <button
             onClick={toggleMenu}
@@ -174,7 +185,7 @@ const Navber = ({ isAuthenticated = false, user = { name: "Alex M.", initial: "A
               </>
             )}
           </ul>
-        
+
           {isAuthenticated ? (
             <div className="flex flex-col gap-3 mt-2 pt-4 border-t border-gray-100">
               <div className="flex items-center gap-3 px-2">
