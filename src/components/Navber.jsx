@@ -1,0 +1,206 @@
+"use client";
+import React, { useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Home, Square, ChevronDown, X, Menu } from "lucide-react";
+
+const Navber = ({ isAuthenticated = false, user = { name: "Alex M.", initial: "A" } }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const pathname = usePathname();
+
+  const toggleMenu = () => setIsOpen(!isOpen);
+  const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
+
+  const getLinkClass = (path) => {
+    const base = "px-4 py-2 rounded-lg transition-colors";
+    return pathname === path 
+      ? `${base} bg-[#FEF3C7] text-[#B45309]` 
+      : `${base} text-gray-600 hover:bg-gray-100`;
+  };
+
+  const getMobileLinkClass = (path) => {
+    const base = "block px-4 py-3 rounded-xl transition-colors";
+    return pathname === path 
+      ? `${base} bg-[#FEF3C7] text-[#B45309]` 
+      : `${base} text-gray-600 hover:bg-gray-50`;
+  };
+
+  return (
+    <nav className="bg-white border border-yellow-200 shadow-sm rounded-2xl px-4 lg:px-6 py-3 w-11/12 max-w-7xl mx-auto my-4 sticky top-4 z-50 font-sans">
+      <div className="flex justify-between items-center w-full">
+        
+        {/* Logo Section */}
+        <div className="flex gap-2.5 items-center">
+          <div className="bg-[#E58B19] rounded-xl p-2 flex justify-center items-center text-white shadow-sm">
+            <Home size={20} strokeWidth={2} />
+          </div>
+          <h3 className="font-extrabold text-xl tracking-tight text-gray-800">
+            Study<span className="text-[#E58B19]">Nook</span>
+          </h3>
+        </div>
+
+        {/* Desktop Navigation Links */}
+        <ul className="hidden md:flex items-center gap-2 text-sm font-medium">
+          <li>
+            <Link href="/" className={getLinkClass("/")}>
+              Home
+            </Link>
+          </li>
+          <li>
+            <Link href="/rooms" className={getLinkClass("/rooms")}>
+              Rooms
+            </Link>
+          </li>
+          {isAuthenticated && (
+            <>
+              <li>
+                <Link href="/add-room" className={getLinkClass("/add-room")}>
+                  Add Room
+                </Link>
+              </li>
+              <li>
+                <Link href="/my-listings" className={getLinkClass("/my-listings")}>
+                  My Listings
+                </Link>
+              </li>
+              <li>
+                <Link href="/my-bookings" className={getLinkClass("/my-bookings")}>
+                  My Bookings
+                </Link>
+              </li>
+            </>
+          )}
+        </ul>
+
+        {/* Desktop Auth / User Links */}
+        <div className="hidden md:flex items-center gap-3 relative">
+          {/* Notification / Theme Toggle Button Placeholder (Square icon) */}
+          <button className="w-10 h-10 flex items-center justify-center border border-gray-200 rounded-xl text-gray-400 hover:bg-gray-50 hover:border-gray-300 transition-colors">
+            <Square size={18} strokeWidth={2} />
+          </button>
+
+          {!isAuthenticated ? (
+            <div className="flex gap-3 text-sm font-semibold">
+              <Link href="/signin" className="px-6 py-2.5 border border-gray-200 rounded-full text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-all">
+                Login
+              </Link>
+              <Link href="/register" className="px-6 py-2.5 bg-[#E58B19] border border-[#E58B19] rounded-full text-white hover:bg-[#D97706] transition-all shadow-sm">
+                Register
+              </Link>
+            </div>
+          ) : (
+            <div className="relative">
+              <button 
+                onClick={toggleDropdown}
+                className="flex items-center gap-2 border border-gray-200 py-1 px-3 pr-2 rounded-full bg-white hover:bg-gray-50 hover:border-gray-300 transition-all"
+              >
+                <div className="w-8 h-8 rounded-full bg-[#E58B19] text-white flex items-center justify-center font-bold text-sm">
+                  {user.initial}
+                </div>
+                <span className="text-sm font-semibold text-gray-700 ml-1">{user.name}</span>
+                <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} strokeWidth={2} />
+              </button>
+
+              {/* Dropdown Menu */}
+              {isDropdownOpen && (
+                <div className="absolute top-full right-0 mt-3 w-52 bg-white border border-gray-100 rounded-2xl shadow-xl py-2 flex flex-col z-50">
+                  <Link href="/my-listings" className="px-5 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors">
+                    My Listings
+                  </Link>
+                  <Link href="/my-bookings" className="px-5 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors">
+                    My Bookings
+                  </Link>
+                  <div className="h-px bg-gray-100 my-1 mx-2"></div>
+                  <button className="px-5 py-2.5 text-sm font-medium text-red-500 hover:bg-red-50 hover:text-red-600 text-left transition-colors">
+                    Sign out
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Mobile Menu Toggle Button */}
+        <div className="md:hidden flex items-center gap-2">
+          <button className="w-10 h-10 flex items-center justify-center border border-gray-200 rounded-xl text-gray-400 hover:bg-gray-50 transition-colors">
+             <Square size={18} strokeWidth={2} />
+          </button>
+          <button
+            onClick={toggleMenu}
+            className="w-10 h-10 flex justify-center items-center border border-gray-200 rounded-xl text-gray-600 focus:outline-none hover:bg-gray-50 transition-colors"
+            aria-label="Toggle Menu"
+          >
+            {isOpen ? (
+              <X size={20} strokeWidth={2} />
+            ) : (
+              <Menu size={20} strokeWidth={2} />
+            )}
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile Navigation Menu (Drawer) */}
+      {isOpen && (
+        <div className="md:hidden mt-4 border-t border-gray-100 pt-4 flex flex-col gap-3 w-full bg-white">
+          <ul className="flex flex-col gap-1.5 text-sm font-medium">
+            <li>
+              <Link href="/" className={getMobileLinkClass("/")} onClick={toggleMenu}>
+                Home
+              </Link>
+            </li>
+            <li>
+              <Link href="/rooms" className={getMobileLinkClass("/rooms")} onClick={toggleMenu}>
+                Rooms
+              </Link>
+            </li>
+            {isAuthenticated && (
+              <>
+                <li>
+                  <Link href="/add-room" className={getMobileLinkClass("/add-room")} onClick={toggleMenu}>
+                    Add Room
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/my-listings" className={getMobileLinkClass("/my-listings")} onClick={toggleMenu}>
+                    My Listings
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/my-bookings" className={getMobileLinkClass("/my-bookings")} onClick={toggleMenu}>
+                    My Bookings
+                  </Link>
+                </li>
+              </>
+            )}
+          </ul>
+        
+          {isAuthenticated ? (
+            <div className="flex flex-col gap-3 mt-2 pt-4 border-t border-gray-100">
+              <div className="flex items-center gap-3 px-2">
+                <div className="w-10 h-10 rounded-full bg-[#E58B19] text-white flex items-center justify-center font-bold">
+                  {user.initial}
+                </div>
+                <span className="text-sm font-semibold text-gray-700">{user.name}</span>
+              </div>
+              <button className="w-full text-center py-3 border border-red-100 text-red-500 rounded-xl hover:bg-red-50 transition-colors font-semibold">
+                Sign out
+              </button>
+            </div>
+          ) : (
+            <div className="flex gap-3 mt-4">
+              <Link href="/signin" className="flex-1 text-center py-2.5 border border-gray-200 rounded-xl text-gray-700 hover:bg-gray-50 font-semibold transition-all" onClick={toggleMenu}>
+                Login
+              </Link>
+              <Link href="/register" className="flex-1 text-center py-2.5 bg-[#E58B19] border border-[#E58B19] rounded-xl text-white hover:bg-[#D97706] font-semibold shadow-sm transition-all" onClick={toggleMenu}>
+                Register
+              </Link>
+            </div>
+          )}
+        </div>
+      )}
+    </nav>
+  );
+};
+
+export default Navber;
