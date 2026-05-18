@@ -109,7 +109,7 @@ const HeroBanner = () => {
           </motion.div>
         </motion.div>
 
-        {/* Floating Card at bottom right - desktop only */}
+        {/* Floating Card at bottom right  desktop only */}
         <motion.div 
           className="hidden md:flex flex-col justify-end"
           initial={{ opacity: 0, x: 50 }}
