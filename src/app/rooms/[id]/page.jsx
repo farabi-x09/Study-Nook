@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { MapPin, Users, Clock, BarChart3, Wifi, Wind, Monitor, Zap, CheckSquare, ArrowLeft, Star } from 'lucide-react';
 import EditRoomButton from './EditRoomButton';
+import DeleteRoomButton from './DeleteRoomButton';
 
 const AMENITY_ICONS = {
   'Wi-Fi': Wifi,
@@ -181,6 +182,7 @@ export default async function RoomDetailPage({ params }) {
             </p>
           </div>
           <div className="w-full sm:w-auto flex gap-3">
+            <DeleteRoomButton room={room} />
             <EditRoomButton room={room} />
             <button className="flex-1 sm:flex-none px-8 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-600 text-white font-bold text-sm hover:shadow-lg hover:-translate-y-0.5 transition-all">
               Book Now

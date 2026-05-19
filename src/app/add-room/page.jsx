@@ -20,11 +20,13 @@ import {
   Card
 } from "@heroui/react";
 import toast from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
 
 const AddRoomPage = () => {
 
 
 
+  const router = useRouter();
   const [formData, setFormData] = useState({
     roomName: '',
     description: '',
@@ -34,6 +36,7 @@ const AddRoomPage = () => {
     hourlyRate: '',
     amenities: []
   });
+
 
   const amenitiesList = [
     'Whiteboard',
@@ -71,11 +74,18 @@ const AddRoomPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget)
-    const room = Object.fromEntries(formData.entries());
-    console.log(room);
-    // console.log('Submitted Room Data:', formData);
-    // TODO: Add API call to save the room
+    const form = new FormData(e.currentTarget);
+    const raw = Object.fromEntries(form.entries());
+    // Map form fields to API schema
+    const room = {
+      name: raw.roomName,
+      description: raw.description,
+      imageUrl: raw.image,
+      floor: raw.floor,
+      capacity: raw.capacity,
+      hourlyRate: raw.hourlyRate,
+      amenities: formData.amenities // Use state for amenities since they aren't standard form inputs
+    };
 
     const res = await fetch('http://localhost:5000/room',{
       method: 'POST',
@@ -87,6 +97,7 @@ const AddRoomPage = () => {
     const data = await res.json();
     console.log(data);
       toast.success('Room added successfully');
+      router.push('/rooms');
    
   };
 

@@ -27,15 +27,16 @@ const AMENITY_COLORS = {
   'Whiteboard': 'bg-amber-50 text-amber-700',
 };
 
-export default function RoomCard({ room, onView, onSave }) {
+  export default function RoomCard({ room, onView, onSave }) {
+  const roomId = room._id || room.id;
   const [isSaved, setIsSaved] = useState(false);
   const [imgSrc, setImgSrc] = useState(
-    room.imageUrl ||  'https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&q=80&w=600'
+    room.imageUrl || 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&q=80&w=600'
   );
 
   React.useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setImgSrc(room.imageUrl ||  'https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&q=80&w=600');
+    setImgSrc(room.imageUrl || 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&q=80&w=600');
   }, [room.imageUrl, room.image]);
 
   return (
@@ -100,7 +101,7 @@ export default function RoomCard({ room, onView, onSave }) {
       <div className="px-4 pb-4 flex gap-2">
         
         <Link
-          href={`/rooms/${room._id}`}
+          href={`/rooms/${roomId}`}
           className="flex-1"
           onClick={(e) => e.stopPropagation()}
         >
@@ -112,7 +113,7 @@ export default function RoomCard({ room, onView, onSave }) {
           onClick={(e) => { 
             e.stopPropagation(); 
             setIsSaved(!isSaved);
-            onSave && onSave(room._id || room.id);
+            onSave && onSave(roomId);
           }}
           className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all border`}
           style={{

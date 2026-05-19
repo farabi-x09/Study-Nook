@@ -64,10 +64,21 @@ export default function EditModalForm({ room, onClose, onUpdated }) {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await fetch(`http://localhost:5000/room/${room._id}`, {
+      // Map form fields to API schema
+      const mappedData = {
+        name: formData.roomName,
+        description: formData.description,
+        imageUrl: formData.image,
+        floor: formData.floor,
+        capacity: formData.capacity,
+        hourlyRate: formData.hourlyRate,
+        amenities: formData.amenities || []
+      };
+
+      const res = await fetch(`http://localhost:5000/room/${room._id || room.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(mappedData),
       });
       const data = await res.json();
       console.log(data);    

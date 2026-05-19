@@ -80,7 +80,7 @@ export default function DeleteRoomButton({ room }) {
               <div className="px-6 pb-6">
                 <p className="theme-text-muted text-sm leading-relaxed">
                   Are you sure you want to delete{' '}
-                  <span className="font-semibold theme-text">"{room.name || 'this room'}"</span>?
+                  <span className="font-semibold theme-text">&quot;{room.name || 'this room'}&quot;</span>?
                   All data associated with this room will be permanently removed.
                 </p>
 
