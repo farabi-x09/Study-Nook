@@ -79,8 +79,8 @@ const Footer = () => {
         </div>
 
         {/* Bottom Bar / Copyright */}
-        <div className="pt-6 border-t border-gray-100 flex justify-center items-center text-sm text-gray-400">
-          <p>Copyright © {new Date().getFullYear()} StudyNook. All rights reserved.</p>
+        <div className="pt-6 border-t border-gray-100 flex justify-center items-center text-sm text-gray-400 text-center px-4">
+          <p className="leading-relaxed">Copyright © {new Date().getFullYear()} StudyNook. All rights reserved.</p>
         </div>
       </div>
     </footer>

@@ -1,3 +1,83 @@
 @import "tailwindcss";
-@import "@heroui/styles"; 
+@import "@heroui/styles";
 
+/* Design Tokens */
+:root {
+  --bg-app: #FCFBF4;
+  --bg-card: #FFFFFF;
+  --bg-input: #FFFDF5;
+  --text-primary: #1C1410;
+  --text-secondary: #78716C;
+  --border-color: #FDE68A;
+  --amber-light: #FEF3C7;
+  --amber-dark: #D97706;
+  --card-hover: rgba(217, 119, 6, 0.03);
+}
+
+:root.dark {
+  --bg-app: #120D0A;
+  --bg-card: #1C1410;
+  --bg-input: #261D18;
+  --text-primary: #FFFDF5;
+  --text-secondary: #A8A29E;
+  --border-color: #3F2C24;
+  --amber-light: #2C1D17;
+  --amber-dark: #F59E0B;
+  --card-hover: rgba(245, 158, 11, 0.05);
+}
+
+/* Base resets mapped to variables */
+html, body {
+  background-color: var(--bg-app) !important;
+  color: var(--text-primary) !important;
+  transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
+
+/* Card classes */
+.theme-card {
+  background-color: var(--bg-card) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-primary) !important;
+  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+}
+
+.theme-text {
+  color: var(--text-primary) !important;
+  transition: color 0.25s ease;
+}
+
+.theme-text-muted {
+  color: var(--text-secondary) !important;
+  transition: color 0.25s ease;
+}
+
+.theme-input {
+  background-color: var(--bg-input) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-primary) !important;
+  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+}
+
+.theme-border {
+  border-color: var(--border-color) !important;
+  transition: border-color 0.25s ease;
+}
+
+/* Make sure navbar and footer follow dark mode */
+nav {
+  background-color: var(--bg-card) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-primary) !important;
+  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+}
+
+nav a {
+  transition: color 0.25s ease, background-color 0.25s ease;
+}
+
+footer {
+  background-color: var(--bg-card) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-primary) !important;
+  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+}

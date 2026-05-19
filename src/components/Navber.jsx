@@ -1,33 +1,57 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Square, ChevronDown, X, Menu } from "lucide-react";
+import { Home, ChevronDown, X, Menu, Sun, Moon } from "lucide-react";
 
 const Navber = ({ isAuthenticated = false, user = { name: "Alex M.", initial: "A" } }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const pathname = usePathname();
+  const [theme, setTheme] = useState("light");
+
+  // Load initial theme from localStorage safely
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme") || "light";
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setTheme(savedTheme);
+  }, []);
+
+  // Apply theme to document element
+  useEffect(() => {
+    const root = window.document.documentElement;
+    if (theme === "dark") {
+      root.classList.add("dark");
+    } else {
+      root.classList.remove("dark");
+    }
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === "light" ? "dark" : "light");
+  };
 
   const toggleMenu = () => setIsOpen(!isOpen);
   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
 
   const getLinkClass = (path) => {
-    const base = "px-4 py-2 rounded-lg transition-colors";
+    const base = "px-4 py-2 rounded-lg transition-all duration-250";
     return pathname === path
-      ? `${base} bg-[#FEF3C7] text-[#B45309]`
-      : `${base} text-gray-600 hover:bg-gray-100`;
+      ? `${base} bg-[#FEF3C7] dark:bg-amber-950/40 text-[#B45309] dark:text-[#FBBF24] font-semibold`
+      : `${base} theme-text-muted hover:bg-amber-500/10 hover:text-amber-500`;
   };
 
   const getMobileLinkClass = (path) => {
-    const base = "block px-4 py-3 rounded-xl transition-colors";
+    const base = "block px-4 py-3 rounded-xl transition-all duration-250";
     return pathname === path
-      ? `${base} bg-[#FEF3C7] text-[#B45309]`
-      : `${base} text-gray-600 hover:bg-gray-50`;
+      ? `${base} bg-[#FEF3C7] dark:bg-amber-950/40 text-[#B45309] dark:text-[#FBBF24] font-semibold`
+      : `${base} theme-text-muted hover:bg-amber-500/10 hover:text-amber-500`;
   };
 
   return (
-    <nav className="bg-white border border-yellow-200 shadow-sm rounded-2xl px-4 lg:px-6 py-3 w-11/12 max-w-7xl mx-auto my-4 sticky top-4 z-50 font-sans">
+    <div className="w-full sticky top-0 z-50 flex justify-center px-4 py-2">
+      <nav className="theme-card border shadow-md rounded-2xl px-4 lg:px-6 py-3 w-full max-w-7xl font-sans">
       <div className="flex justify-between items-center w-full">
 
         {/* Logo Section */}
@@ -35,7 +59,7 @@ const Navber = ({ isAuthenticated = false, user = { name: "Alex M.", initial: "A
           <div className="bg-[#E58B19] rounded-xl p-2 flex justify-center items-center text-white shadow-sm">
             <Home size={20} strokeWidth={2} />
           </div>
-          <h3 className="font-extrabold text-xl tracking-tight text-gray-800">
+          <h3 className="font-extrabold text-xl tracking-tight theme-text">
             Study<span className="text-[#E58B19]">Nook</span>
           </h3>
         </div>
@@ -86,14 +110,22 @@ const Navber = ({ isAuthenticated = false, user = { name: "Alex M.", initial: "A
 
         {/* Desktop Auth / User Links */}
         <div className="hidden md:flex items-center gap-3 relative">
-          {/* Notification / Theme Toggle Button Placeholder (Square icon) */}
-          <button className="w-10 h-10 flex items-center justify-center border border-gray-200 rounded-xl text-gray-400 hover:bg-gray-50 hover:border-gray-300 transition-colors">
-            <Square size={18} strokeWidth={2} />
+          {/* Theme Toggle Button */}
+          <button 
+            onClick={toggleTheme}
+            className="w-10 h-10 flex items-center justify-center border border-gray-200 dark:border-amber-900/30 rounded-xl text-amber-500 hover:bg-amber-50/40 dark:hover:bg-amber-950/20 transition-all cursor-pointer shadow-sm bg-white dark:bg-amber-950/10"
+            aria-label="Toggle Theme"
+          >
+            {theme === "light" ? (
+              <Sun size={18} strokeWidth={2.2} />
+            ) : (
+              <Moon size={18} strokeWidth={2.2} className="text-amber-400" />
+            )}
           </button>
 
           {!isAuthenticated ? (
             <div className="flex gap-3 text-sm font-semibold">
-              <Link href="/signin" className="px-6 py-2.5 border border-gray-200 rounded-full text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-all">
+              <Link href="/signin" className="px-6 py-2.5 border theme-border rounded-full theme-text hover:bg-amber-500/10 transition-all">
                 Login
               </Link>
               <Link href="/register" className="px-6 py-2.5 bg-[#E58B19] border border-[#E58B19] rounded-full text-white hover:bg-[#D97706] transition-all shadow-sm">
@@ -134,8 +166,17 @@ const Navber = ({ isAuthenticated = false, user = { name: "Alex M.", initial: "A
 
         {/* Mobile Menu Toggle Button */}
         <div className="md:hidden flex items-center gap-2">
-          <button className="w-10 h-10 flex items-center justify-center border border-gray-200 rounded-xl text-gray-400 hover:bg-gray-50 transition-colors">
-            <Square size={18} strokeWidth={2} />
+          {/* Theme Toggle Button (Mobile) */}
+          <button 
+            onClick={toggleTheme}
+            className="w-10 h-10 flex items-center justify-center border border-gray-200 dark:border-amber-900/30 rounded-xl text-amber-500 hover:bg-amber-50/40 dark:hover:bg-amber-950/20 transition-all cursor-pointer bg-white dark:bg-amber-950/10"
+            aria-label="Toggle Theme"
+          >
+            {theme === "light" ? (
+              <Sun size={18} strokeWidth={2.2} />
+            ) : (
+              <Moon size={18} strokeWidth={2.2} className="text-amber-400" />
+            )}
           </button>
           <button
             onClick={toggleMenu}
@@ -165,6 +206,18 @@ const Navber = ({ isAuthenticated = false, user = { name: "Alex M.", initial: "A
                 Rooms
               </Link>
             </li>
+
+             {/* add tre romm for cheak */}
+
+          <li>
+            <Link href="/add-room" className={getMobileLinkClass("/add-room")} onClick={toggleMenu}>
+              Add Room
+            </Link>
+          </li>
+
+
+          {/* end */}
+          
             {isAuthenticated && (
               <>
                 <li>
@@ -211,6 +264,7 @@ const Navber = ({ isAuthenticated = false, user = { name: "Alex M.", initial: "A
         </div>
       )}
     </nav>
+  </div>
   );
 };
 
