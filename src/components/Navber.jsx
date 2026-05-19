@@ -134,8 +134,8 @@ const Navber = ({ isAuthenticated = false, user = { name: "Alex M.", initial: "A
               </Link>
               <Link href="/register" className={
                 pathname === "/register"
-                  ? "px-6 py-2.5 rounded-full font-semibold transition-all bg-[#FEF3C7] dark:bg-amber-950/40 text-[#B45309] dark:text-[#FBBF24] shadow-sm"
-                  : "px-6 py-2.5 bg-[#E58B19] border border-[#E58B19] rounded-full text-white hover:bg-[#D97706] transition-all shadow-sm font-semibold"
+                 ? "px-6 py-2.5 rounded-full font-semibold transition-all bg-[#FEF3C7] dark:bg-amber-950/40 text-[#B45309] dark:text-[#FBBF24]"
+                  : "px-6 py-2.5 border theme-border rounded-full theme-text hover:bg-amber-500/10 transition-all font-semibold"
               }>
                 Register
               </Link>
@@ -188,7 +188,7 @@ const Navber = ({ isAuthenticated = false, user = { name: "Alex M.", initial: "A
           </button>
           <button
             onClick={toggleMenu}
-            className="w-10 h-10 flex justify-center items-center border border-gray-200 rounded-xl text-gray-600 focus:outline-none hover:bg-gray-50 transition-colors"
+            className="w-10 h-10 flex justify-center items-center border border-gray-200 dark:border-amber-900/30 rounded-xl text-gray-600 dark:text-gray-300 focus:outline-none hover:bg-gray-50 dark:hover:bg-amber-950/20 transition-colors bg-white dark:bg-amber-950/10"
             aria-label="Toggle Menu"
           >
             {isOpen ? (
@@ -202,7 +202,7 @@ const Navber = ({ isAuthenticated = false, user = { name: "Alex M.", initial: "A
 
       {/* Mobile Navigation Menu (Drawer) */}
       {isOpen && (
-        <div className="md:hidden mt-4 border-t border-gray-100 pt-4 flex flex-col gap-3 w-full bg-white">
+        <div className="md:hidden mt-4 border-t theme-border pt-4 flex flex-col gap-3 w-full">
           <ul className="flex flex-col gap-1.5 text-sm font-medium">
             <li>
               <Link href="/" className={getMobileLinkClass("/")} onClick={toggleMenu}>
@@ -248,14 +248,14 @@ const Navber = ({ isAuthenticated = false, user = { name: "Alex M.", initial: "A
           </ul>
 
           {isAuthenticated ? (
-            <div className="flex flex-col gap-3 mt-2 pt-4 border-t border-gray-100">
+            <div className="flex flex-col gap-3 mt-2 pt-4 border-t theme-border">
               <div className="flex items-center gap-3 px-2">
                 <div className="w-10 h-10 rounded-full bg-[#E58B19] text-white flex items-center justify-center font-bold">
                   {user.initial}
                 </div>
-                <span className="text-sm font-semibold text-gray-700">{user.name}</span>
+                <span className="text-sm font-semibold theme-text">{user.name}</span>
               </div>
-              <button className="w-full text-center py-3 border border-red-100 text-red-500 rounded-xl hover:bg-red-50 transition-colors font-semibold">
+              <button className="w-full text-center py-3 border border-red-100 dark:border-red-900/30 text-red-500 rounded-xl hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors font-semibold">
                 Sign out
               </button>
             </div>
@@ -264,14 +264,14 @@ const Navber = ({ isAuthenticated = false, user = { name: "Alex M.", initial: "A
               <Link href="/signin" className={
                 pathname === "/signin" 
                   ? "flex-1 text-center py-2.5 rounded-xl font-semibold transition-all bg-[#FEF3C7] dark:bg-amber-950/40 text-[#B45309] dark:text-[#FBBF24]"
-                  : "flex-1 text-center py-2.5 border border-gray-200 rounded-xl text-gray-700 hover:bg-gray-50 font-semibold transition-all"
+                  : "flex-1 text-center py-2.5 border theme-border rounded-xl theme-text hover:bg-amber-500/10 font-semibold transition-all"
               } onClick={toggleMenu}>
                 Login
               </Link>
               <Link href="/register" className={
                 pathname === "/register"
                   ? "flex-1 text-center py-2.5 rounded-xl font-semibold transition-all bg-[#FEF3C7] dark:bg-amber-950/40 text-[#B45309] dark:text-[#FBBF24]"
-                  : "flex-1 text-center py-2.5 bg-[#E58B19] border border-[#E58B19] rounded-xl text-white hover:bg-[#D97706] font-semibold shadow-sm transition-all"
+                  : "flex-1 text-center py-2.5 border theme-border rounded-xl theme-text hover:bg-amber-500/10 font-semibold transition-all"
               } onClick={toggleMenu}>
                 Register
               </Link>

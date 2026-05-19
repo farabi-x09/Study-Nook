@@ -2,8 +2,8 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { User, Mail, Lock, UserPlus, ArrowRight } from 'lucide-react';
-import { TextField, Label, InputGroup, Button, Card } from "@heroui/react";
+import { Check } from 'lucide-react';
+import { Button } from "@heroui/react";
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -15,6 +15,7 @@ const RegisterPage = () => {
     name: '',
     email: '',
     password: '',
+    photoUrl: '',
   });
   const [loading, setLoading] = useState(false);
 
@@ -26,8 +27,19 @@ const RegisterPage = () => {
     }));
   };
 
+  const hasMinLength = formData.password.length >= 6;
+  const hasUppercase = /[A-Z]/.test(formData.password);
+  const hasLowercase = /[a-z]/.test(formData.password);
+  
+  const isFormValid = formData.name && formData.email && hasMinLength && hasUppercase && hasLowercase;
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!isFormValid) {
+      toast.error("Please fill all required fields correctly.");
+      return;
+    }
+    
     setLoading(true);
 
     try {
@@ -35,6 +47,7 @@ const RegisterPage = () => {
         email: formData.email,
         password: formData.password,
         name: formData.name,
+        image: formData.photoUrl || undefined,
       });
 
       if (error) {
@@ -61,122 +74,152 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8 font-sans transition-colors duration-300">
+    <div className="min-h-[calc(100vh-80px)] py-12 px-4 sm:px-6 lg:px-8 font-sans transition-colors duration-300 flex items-center justify-center">
       <motion.div
         variants={containerVariants}
         initial="hidden"
         animate="show"
-        className="max-w-xl mx-auto"
+        className="w-full max-w-[900px]"
       >
-        <Card className="theme-card rounded-[2rem] shadow-[0_0_50px_-12px_rgba(229,139,25,0.15)] overflow-hidden border p-0" shadow="none">
-          {/* Header */}
-          <div className="bg-amber-500/10 dark:bg-amber-950/20 px-8 py-10 relative overflow-hidden border-b theme-border text-center">
-            {/* Background pattern */}
-            <div className="absolute inset-0 opacity-[0.03] text-[#E58B19]">
-              <svg className="h-full w-full" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                  <pattern id="grid-pattern" width="32" height="32" patternUnits="userSpaceOnUse">
-                    <path d="M0 32V0h32" fill="none" stroke="currentColor" strokeWidth="1" />
-                  </pattern>
-                </defs>
-                <rect width="100%" height="100%" fill="url(#grid-pattern)" />
-              </svg>
-            </div>
-
-            <div className="relative z-10 flex flex-col items-center">
-              <div className="w-14 h-14 bg-gradient-to-tr from-amber-400 to-amber-600 rounded-2xl flex justify-center items-center text-white shadow-lg shadow-amber-500/30 mb-5">
-                <UserPlus size={28} strokeWidth={2.5} />
-              </div>
-              <h1 className="text-3xl font-bold theme-text font-serif mb-2">
-                Create an Account
-              </h1>
-              <p className="theme-text-muted text-sm max-w-sm font-light">
-                Join StudyNook to easily book rooms, manage listings, and discover the perfect spaces for your needs.
+        <div className="theme-card rounded-3xl shadow-xl overflow-hidden border border-amber-200 dark:border-amber-900/40 flex flex-col md:flex-row min-h-[550px]">
+          
+          {/* Left Side - Image & Copy */}
+          <div className="w-full md:w-5/12 relative overflow-hidden min-h-[300px] md:min-h-full p-8 md:p-10 flex flex-col justify-end bg-amber-700/80">
+            {/* Background Image */}
+            <div 
+              className="absolute inset-0 bg-cover bg-center mix-blend-multiply opacity-80"
+              style={{ backgroundImage: "url('/study-room-bg.png')" }}
+            ></div>
+            
+            {/* Gradient Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-amber-600/90 via-amber-600/20 to-transparent"></div>
+            
+            <div className="relative z-10 text-white mt-auto">
+              <h2 className="text-3xl font-bold font-serif mb-4 leading-tight">
+                Join thousands of focused learners.
+              </h2>
+              <p className="text-white/90 text-sm mb-8 leading-relaxed font-medium">
+                Create your free account and start booking premium study rooms across the campus library today.
               </p>
+              
+              <div className="flex gap-1.5 items-center">
+                <div className="w-2 h-2 rounded-full bg-white/50"></div>
+                <div className="w-6 h-2 rounded-full bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.8)]"></div>
+                <div className="w-2 h-2 rounded-full bg-white/50"></div>
+              </div>
             </div>
           </div>
+          
+          {/* Right Side - Form */}
+          <div className="w-full md:w-7/12 p-8 md:p-12 theme-card bg-white dark:bg-[#18181b]">
+            <h1 className="text-3xl font-bold theme-text font-serif mb-1">
+              Create account
+            </h1>
+            <p className="theme-text-muted text-sm font-medium mb-8">
+              Free to join. No credit card required.
+            </p>
 
-          <form onSubmit={handleSubmit}>
-            <div className="px-8 py-8 flex flex-col gap-5 overflow-visible theme-text">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+              
+              {/* Full Name */}
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[11px] font-bold text-gray-500 tracking-wider">FULL NAME</label>
+                <input 
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  placeholder="Your full name"
+                  className="w-full bg-[#2a2a2a] text-white placeholder-gray-500 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all border border-transparent focus:border-amber-500 text-sm"
+                  required
+                />
+              </div>
+              
+              {/* Email Address */}
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[11px] font-bold text-gray-500 tracking-wider">EMAIL ADDRESS</label>
+                <input 
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder="your@university.edu"
+                  className="w-full bg-[#2a2a2a] text-white placeholder-gray-500 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all border border-transparent focus:border-amber-500 text-sm"
+                  required
+                />
+              </div>
 
-              {/* Name */}
-              <TextField isRequired className="w-full flex flex-col gap-1.5">
-                <Label className="block text-sm font-semibold theme-text-muted">Full Name</Label>
-                <InputGroup fullWidth className="theme-border focus-within:border-[#E58B19] focus-within:!ring-[#E58B19] theme-input hover:opacity-95 transition-all rounded-xl theme-text">
-                  <InputGroup.Prefix className="pl-3 pr-2 text-gray-400 flex items-center">
-                    <User size={18} />
-                  </InputGroup.Prefix>
-                  <InputGroup.Input
-                    name="name"
-                    placeholder="e.g. John Doe"
-                    value={formData.name}
-                    onChange={handleChange}
-                    className="theme-text placeholder-gray-400 bg-transparent border-none outline-none focus:ring-0 focus:outline-none"
-                  />
-                </InputGroup>
-              </TextField>
-
-              {/* Email */}
-              <TextField isRequired className="w-full flex flex-col gap-1.5">
-                <Label className="block text-sm font-semibold theme-text-muted">Email Address</Label>
-                <InputGroup fullWidth className="theme-border focus-within:border-[#E58B19] focus-within:!ring-[#E58B19] theme-input hover:opacity-95 transition-all rounded-xl theme-text">
-                  <InputGroup.Prefix className="pl-3 pr-2 text-gray-400 flex items-center">
-                    <Mail size={18} />
-                  </InputGroup.Prefix>
-                  <InputGroup.Input
-                    type="email"
-                    name="email"
-                    placeholder="you@example.com"
-                    value={formData.email}
-                    onChange={handleChange}
-                    className="theme-text placeholder-gray-400 bg-transparent border-none outline-none focus:ring-0 focus:outline-none"
-                  />
-                </InputGroup>
-              </TextField>
+              {/* Profile Photo URL */}
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[11px] font-bold text-gray-500 tracking-wider">PROFILE PHOTO URL</label>
+                <input 
+                  type="text"
+                  name="photoUrl"
+                  value={formData.photoUrl}
+                  onChange={handleChange}
+                  placeholder="https://... (optional)"
+                  className="w-full bg-[#2a2a2a] text-white placeholder-gray-500 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all border border-transparent focus:border-amber-500 text-sm"
+                />
+              </div>
 
               {/* Password */}
-              <TextField isRequired className="w-full flex flex-col gap-1.5">
-                <Label className="block text-sm font-semibold theme-text-muted">Password</Label>
-                <InputGroup fullWidth className="theme-border focus-within:border-[#E58B19] focus-within:!ring-[#E58B19] theme-input hover:opacity-95 transition-all rounded-xl theme-text">
-                  <InputGroup.Prefix className="pl-3 pr-2 text-gray-400 flex items-center">
-                    <Lock size={18} />
-                  </InputGroup.Prefix>
-                  <InputGroup.Input
-                    type="password"
-                    name="password"
-                    placeholder="••••••••"
-                    value={formData.password}
-                    onChange={handleChange}
-                    className="theme-text placeholder-gray-400 bg-transparent border-none outline-none focus:ring-0 focus:outline-none"
-                  />
-                </InputGroup>
-              </TextField>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[11px] font-bold text-gray-500 tracking-wider">PASSWORD</label>
+                <input 
+                  type="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="Create a strong password"
+                  className="w-full bg-[#2a2a2a] text-white placeholder-gray-500 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all border border-transparent focus:border-amber-500 text-sm"
+                  required
+                />
+                <div className="flex flex-col gap-1.5 mt-2 text-xs text-gray-400">
+                  <div className="flex items-center gap-2">
+                    <div className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center transition-colors ${hasMinLength ? 'border-amber-500 bg-amber-500 text-white' : 'border-gray-500'}`}>
+                      {hasMinLength && <Check size={10} strokeWidth={3} />}
+                    </div> 
+                    <span className={hasMinLength ? 'text-gray-700 dark:text-gray-300' : ''}>At least 6 characters</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center transition-colors ${hasUppercase ? 'border-amber-500 bg-amber-500 text-white' : 'border-gray-500'}`}>
+                      {hasUppercase && <Check size={10} strokeWidth={3} />}
+                    </div> 
+                    <span className={hasUppercase ? 'text-gray-700 dark:text-gray-300' : ''}>One uppercase letter</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center transition-colors ${hasLowercase ? 'border-amber-500 bg-amber-500 text-white' : 'border-gray-500'}`}>
+                      {hasLowercase && <Check size={10} strokeWidth={3} />}
+                    </div> 
+                    <span className={hasLowercase ? 'text-gray-700 dark:text-gray-300' : ''}>One lowercase letter</span>
+                  </div>
+                </div>
+              </div>
 
-            </div>
-
-            <div className="px-8 pb-8 flex flex-col gap-4">
               <Button
                 type="submit"
                 isLoading={loading}
-                className="w-full bg-[#E58B19] hover:bg-[#D97706] text-white font-semibold shadow-lg shadow-[#E58B19]/20 py-3.5"
-                radius="full"
-                size="lg"
-                endContent={!loading && <ArrowRight size={18} strokeWidth={2.5} />}
+                isDisabled={!isFormValid}
+                className={`w-full mt-4 font-semibold py-6 rounded-xl transition-all ${
+                  isFormValid 
+                    ? 'bg-[#E58B19] hover:bg-[#D97706] text-white shadow-lg shadow-[#E58B19]/30 border border-transparent' 
+                    : 'bg-gray-200 text-gray-600 border border-gray-300 shadow-sm dark:bg-zinc-800 dark:text-zinc-400 dark:border-zinc-700 cursor-not-allowed'
+                }`}
               >
-                Sign Up
+                Create Account
               </Button>
 
-              <div className="text-center mt-2">
-                <p className="text-sm theme-text-muted">
+              <div className="text-center mt-3">
+                <p className="text-[13px] theme-text-muted">
                   Already have an account?{' '}
                   <Link href="/signin" className="text-[#E58B19] dark:text-[#FBBF24] font-semibold hover:underline">
-                    Sign in here
+                    Sign in
                   </Link>
                 </p>
               </div>
-            </div>
-          </form>
-        </Card>
+            </form>
+          </div>
+        </div>
       </motion.div>
     </div>
   );

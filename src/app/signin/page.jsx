@@ -2,8 +2,7 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Lock, LogIn, ArrowRight } from 'lucide-react';
-import { TextField, Label, InputGroup, Button, Card } from "@heroui/react";
+import { Button } from "@heroui/react";
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -25,8 +24,15 @@ const SignInPage = () => {
     }));
   };
 
+  const isFormValid = formData.email && formData.password;
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!isFormValid) {
+      toast.error("Please fill all fields.");
+      return;
+    }
+    
     setLoading(true);
 
     try {
@@ -59,105 +65,125 @@ const SignInPage = () => {
   };
 
   return (
-    <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8 font-sans transition-colors duration-300">
+    <div className="min-h-[calc(100vh-80px)] py-12 px-4 sm:px-6 lg:px-8 font-sans transition-colors duration-300 flex items-center justify-center">
       <motion.div
         variants={containerVariants}
         initial="hidden"
         animate="show"
-        className="max-w-xl mx-auto"
+        className="w-full max-w-[900px]"
       >
-        <Card className="theme-card rounded-[2rem] shadow-[0_0_50px_-12px_rgba(229,139,25,0.15)] overflow-hidden border p-0" shadow="none">
-          {/* Header */}
-          <div className="bg-amber-500/10 dark:bg-amber-950/20 px-8 py-10 relative overflow-hidden border-b theme-border text-center">
-            {/* Background pattern */}
-            <div className="absolute inset-0 opacity-[0.03] text-[#E58B19]">
-              <svg className="h-full w-full" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                  <pattern id="grid-pattern" width="32" height="32" patternUnits="userSpaceOnUse">
-                    <path d="M0 32V0h32" fill="none" stroke="currentColor" strokeWidth="1" />
-                  </pattern>
-                </defs>
-                <rect width="100%" height="100%" fill="url(#grid-pattern)" />
-              </svg>
-            </div>
-
-            <div className="relative z-10 flex flex-col items-center">
-              <div className="w-14 h-14 bg-gradient-to-tr from-amber-400 to-amber-600 rounded-2xl flex justify-center items-center text-white shadow-lg shadow-amber-500/30 mb-5">
-                <LogIn size={28} strokeWidth={2.5} />
-              </div>
-              <h1 className="text-3xl font-bold theme-text font-serif mb-2">
-                Welcome Back
-              </h1>
-              <p className="theme-text-muted text-sm max-w-sm font-light">
-                Sign in to your StudyNook account to manage your bookings and listings.
+        <div className="theme-card rounded-3xl shadow-xl overflow-hidden border border-amber-200 dark:border-amber-900/40 flex flex-col md:flex-row min-h-[550px]">
+          
+          {/* Left Side - Image & Copy */}
+          <div className="w-full md:w-5/12 relative overflow-hidden min-h-[300px] md:min-h-full p-8 md:p-10 flex flex-col justify-end bg-amber-700/80">
+            {/* Background Image */}
+            <div 
+              className="absolute inset-0 bg-cover bg-center mix-blend-multiply opacity-80"
+              style={{ backgroundImage: "url('/study-room-bg.png')" }}
+            ></div>
+            
+            {/* Gradient Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-amber-600/90 via-amber-600/20 to-transparent"></div>
+            
+            <div className="relative z-10 text-white mt-auto">
+              <h2 className="text-3xl font-bold font-serif mb-4 leading-tight">
+                Your focus space awaits.
+              </h2>
+              <p className="text-white/90 text-sm mb-8 leading-relaxed font-medium">
+                Sign in to access your bookings, manage listings, and reserve your next study session in seconds.
               </p>
+              
+              <div className="flex gap-1.5 items-center">
+                <div className="w-6 h-2 rounded-full bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.8)]"></div>
+                <div className="w-2 h-2 rounded-full bg-white/50"></div>
+                <div className="w-2 h-2 rounded-full bg-white/50"></div>
+              </div>
             </div>
           </div>
+          
+          {/* Right Side - Form */}
+          <div className="w-full md:w-7/12 p-8 md:p-12 theme-card bg-white dark:bg-[#18181b]">
+            <h1 className="text-3xl font-bold theme-text font-serif mb-1">
+              Welcome back
+            </h1>
+            <p className="theme-text-muted text-sm font-medium mb-8">
+              Sign in to your StudyNook account.
+            </p>
 
-          <form onSubmit={handleSubmit}>
-            <div className="px-8 py-8 flex flex-col gap-5 overflow-visible theme-text">
-
-              {/* Email */}
-              <TextField isRequired className="w-full flex flex-col gap-1.5">
-                <Label className="block text-sm font-semibold theme-text-muted">Email Address</Label>
-                <InputGroup fullWidth className="theme-border focus-within:border-[#E58B19] focus-within:!ring-[#E58B19] theme-input hover:opacity-95 transition-all rounded-xl theme-text">
-                  <InputGroup.Prefix className="pl-3 pr-2 text-gray-400 flex items-center">
-                    <Mail size={18} />
-                  </InputGroup.Prefix>
-                  <InputGroup.Input
-                    type="email"
-                    name="email"
-                    placeholder="you@example.com"
-                    value={formData.email}
-                    onChange={handleChange}
-                    className="theme-text placeholder-gray-400 bg-transparent border-none outline-none focus:ring-0 focus:outline-none"
-                  />
-                </InputGroup>
-              </TextField>
+            <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+              
+              {/* Email Address */}
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[11px] font-bold text-gray-500 tracking-wider uppercase">EMAIL ADDRESS</label>
+                <input 
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder="your@university.edu"
+                  className="w-full bg-[#2a2a2a] text-white placeholder-gray-500 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all border border-transparent focus:border-amber-500 text-sm"
+                  required
+                />
+              </div>
 
               {/* Password */}
-              <TextField isRequired className="w-full flex flex-col gap-1.5">
-                <Label className="block text-sm font-semibold theme-text-muted">Password</Label>
-                <InputGroup fullWidth className="theme-border focus-within:border-[#E58B19] focus-within:!ring-[#E58B19] theme-input hover:opacity-95 transition-all rounded-xl theme-text">
-                  <InputGroup.Prefix className="pl-3 pr-2 text-gray-400 flex items-center">
-                    <Lock size={18} />
-                  </InputGroup.Prefix>
-                  <InputGroup.Input
-                    type="password"
-                    name="password"
-                    placeholder="••••••••"
-                    value={formData.password}
-                    onChange={handleChange}
-                    className="theme-text placeholder-gray-400 bg-transparent border-none outline-none focus:ring-0 focus:outline-none"
-                  />
-                </InputGroup>
-              </TextField>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[11px] font-bold text-gray-500 tracking-wider uppercase">PASSWORD</label>
+                <input 
+                  type="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="••••••••"
+                  className="w-full bg-[#2a2a2a] text-white placeholder-gray-500 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all border border-transparent focus:border-amber-500 text-sm"
+                  required
+                />
+              </div>
 
-            </div>
-
-            <div className="px-8 pb-8 flex flex-col gap-4">
               <Button
                 type="submit"
                 isLoading={loading}
-                className="w-full bg-[#E58B19] hover:bg-[#D97706] text-white font-semibold shadow-lg shadow-[#E58B19]/20 py-3.5"
-                radius="full"
-                size="lg"
-                endContent={!loading && <ArrowRight size={18} strokeWidth={2.5} />}
+                isDisabled={!isFormValid}
+                className={`w-full mt-2 font-semibold py-6 rounded-xl transition-all ${
+                  isFormValid 
+                    ? 'bg-[#E58B19] hover:bg-[#D97706] text-white shadow-lg shadow-[#E58B19]/30 border border-transparent' 
+                    : 'bg-gray-200 text-gray-600 border border-gray-300 shadow-sm dark:bg-zinc-800 dark:text-zinc-400 dark:border-zinc-700 cursor-not-allowed'
+                }`}
               >
                 Sign In
               </Button>
+              
+              <div className="flex items-center gap-4 my-2">
+                <div className="flex-1 h-px bg-gray-200 dark:bg-gray-800"></div>
+                <span className="text-xs text-gray-400 font-medium">or continue with</span>
+                <div className="flex-1 h-px bg-gray-200 dark:bg-gray-800"></div>
+              </div>
+              
+              <Button
+                type="button"
+                onClick={() => toast("Google sign-in coming soon!")}
+                className="w-full bg-white dark:bg-[#2a2a2a] hover:bg-gray-50 dark:hover:bg-[#333333] text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 font-medium py-6 rounded-xl transition-all flex items-center justify-center gap-3"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
+                  <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+                  <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
+                  <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
+                </svg>
+                Continue with Google
+              </Button>
 
               <div className="text-center mt-2">
-                <p className="text-sm theme-text-muted">
-                  Don&apos;t have an account?{' '}
+                <p className="text-[13px] theme-text-muted">
+                  Don{"'"}t have an account?{' '}
                   <Link href="/register" className="text-[#E58B19] dark:text-[#FBBF24] font-semibold hover:underline">
-                    Create one now
+                    Register free
                   </Link>
                 </p>
               </div>
-            </div>
-          </form>
-        </Card>
+            </form>
+          </div>
+        </div>
       </motion.div>
     </div>
   );
