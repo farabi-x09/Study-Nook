@@ -125,10 +125,18 @@ const Navber = ({ isAuthenticated = false, user = { name: "Alex M.", initial: "A
 
           {!isAuthenticated ? (
             <div className="flex gap-3 text-sm font-semibold">
-              <Link href="/signin" className="px-6 py-2.5 border theme-border rounded-full theme-text hover:bg-amber-500/10 transition-all">
+              <Link href="/signin" className={
+                pathname === "/signin" 
+                  ? "px-6 py-2.5 rounded-full font-semibold transition-all bg-[#FEF3C7] dark:bg-amber-950/40 text-[#B45309] dark:text-[#FBBF24]"
+                  : "px-6 py-2.5 border theme-border rounded-full theme-text hover:bg-amber-500/10 transition-all font-semibold"
+              }>
                 Login
               </Link>
-              <Link href="/register" className="px-6 py-2.5 bg-[#E58B19] border border-[#E58B19] rounded-full text-white hover:bg-[#D97706] transition-all shadow-sm">
+              <Link href="/register" className={
+                pathname === "/register"
+                  ? "px-6 py-2.5 rounded-full font-semibold transition-all bg-[#FEF3C7] dark:bg-amber-950/40 text-[#B45309] dark:text-[#FBBF24] shadow-sm"
+                  : "px-6 py-2.5 bg-[#E58B19] border border-[#E58B19] rounded-full text-white hover:bg-[#D97706] transition-all shadow-sm font-semibold"
+              }>
                 Register
               </Link>
             </div>
@@ -253,10 +261,18 @@ const Navber = ({ isAuthenticated = false, user = { name: "Alex M.", initial: "A
             </div>
           ) : (
             <div className="flex gap-3 mt-4">
-              <Link href="/signin" className="flex-1 text-center py-2.5 border border-gray-200 rounded-xl text-gray-700 hover:bg-gray-50 font-semibold transition-all" onClick={toggleMenu}>
+              <Link href="/signin" className={
+                pathname === "/signin" 
+                  ? "flex-1 text-center py-2.5 rounded-xl font-semibold transition-all bg-[#FEF3C7] dark:bg-amber-950/40 text-[#B45309] dark:text-[#FBBF24]"
+                  : "flex-1 text-center py-2.5 border border-gray-200 rounded-xl text-gray-700 hover:bg-gray-50 font-semibold transition-all"
+              } onClick={toggleMenu}>
                 Login
               </Link>
-              <Link href="/register" className="flex-1 text-center py-2.5 bg-[#E58B19] border border-[#E58B19] rounded-xl text-white hover:bg-[#D97706] font-semibold shadow-sm transition-all" onClick={toggleMenu}>
+              <Link href="/register" className={
+                pathname === "/register"
+                  ? "flex-1 text-center py-2.5 rounded-xl font-semibold transition-all bg-[#FEF3C7] dark:bg-amber-950/40 text-[#B45309] dark:text-[#FBBF24]"
+                  : "flex-1 text-center py-2.5 bg-[#E58B19] border border-[#E58B19] rounded-xl text-white hover:bg-[#D97706] font-semibold shadow-sm transition-all"
+              } onClick={toggleMenu}>
                 Register
               </Link>
             </div>
