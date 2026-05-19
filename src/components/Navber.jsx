@@ -1,19 +1,32 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { Home, ChevronDown, X, Menu, Sun, Moon } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { Home, X, Menu, Sun, Moon } from "lucide-react";
+import { authClient } from "@/lib/auth-client";
+import Image from "next/image";
 
-const Navber = ({ isAuthenticated = false, user = { name: "Alex M.", initial: "A" } }) => {
+const Navber = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
   const [theme, setTheme] = useState("light");
+  const [mounted, setMounted] = useState(false);
 
-  // Load initial theme from localStorage safely
+  const { 
+        data: session//refetch the session
+    } = authClient.useSession() 
+  console.log(session);
+  const user = session?.user;
+  const isAuthenticated = mounted && !!session;
+  const initial = user?.name ? user.name.charAt(0).toUpperCase() : "U";
+
+  // Load initial theme from localStorage safely and set mounted state
   useEffect(() => {
-    const savedTheme = localStorage.getItem("theme") || "light";
     // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMounted(true);
+    const savedTheme = localStorage.getItem("theme") || "light";
     setTheme(savedTheme);
   }, []);
 
@@ -34,6 +47,22 @@ const Navber = ({ isAuthenticated = false, user = { name: "Alex M.", initial: "A
 
   const toggleMenu = () => setIsOpen(!isOpen);
   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
+
+  const handleSignOut = async () => {
+    try {
+      await authClient.signOut({
+        fetchOptions: {
+          onSuccess: () => {
+            router.push("/signin");
+            setIsDropdownOpen(false);
+            setIsOpen(false);
+          }
+        }
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const getLinkClass = (path) => {
     const base = "px-4 py-2 rounded-lg transition-all duration-250";
@@ -77,16 +106,7 @@ const Navber = ({ isAuthenticated = false, user = { name: "Alex M.", initial: "A
             </Link>
           </li>
 
-          {/* add tre romm for cheak */}
 
-          <li>
-            <Link href="/add-room" className={getMobileLinkClass("/add-room")} onClick={toggleMenu}>
-              Add Room
-            </Link>
-          </li>
-
-
-          {/* end */}
           {isAuthenticated && (
             <>
               <li>
@@ -141,33 +161,23 @@ const Navber = ({ isAuthenticated = false, user = { name: "Alex M.", initial: "A
               </Link>
             </div>
           ) : (
-            <div className="relative">
-              <button
-                onClick={toggleDropdown}
-                className="flex items-center gap-2 border border-gray-200 py-1 px-3 pr-2 rounded-full bg-white hover:bg-gray-50 hover:border-gray-300 transition-all"
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 border border-gray-200 dark:border-amber-900/30 py-1 px-3 pr-2 rounded-full bg-white dark:bg-amber-950/10 shadow-sm">
+                <div className="w-8 h-8 rounded-full bg-[#E58B19] text-white flex items-center justify-center font-bold text-sm overflow-hidden">
+                  {user?.image ? (
+                    <Image width={200} height={200} src={user.image} alt={user.name || "User"} className="w-full h-full object-cover" />
+                  ) : (
+                    initial
+                  )}
+                </div>
+                <span className="text-sm font-semibold text-gray-700 dark:text-gray-300 ml-1">{user?.name}</span>
+              </div>
+              <button 
+                onClick={handleSignOut}
+                className="px-6 py-2.5 border border-red-200 dark:border-red-900/30 rounded-full text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 transition-all font-semibold text-sm cursor-pointer shadow-sm bg-white dark:bg-[#18181b]"
               >
-                <div className="w-8 h-8 rounded-full bg-[#E58B19] text-white flex items-center justify-center font-bold text-sm">
-                  {user.initial}
-                </div>
-                <span className="text-sm font-semibold text-gray-700 ml-1">{user.name}</span>
-                <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} strokeWidth={2} />
+                Logout
               </button>
-
-              {/* Dropdown Menu */}
-              {isDropdownOpen && (
-                <div className="absolute top-full right-0 mt-3 w-52 bg-white border border-gray-100 rounded-2xl shadow-xl py-2 flex flex-col z-50">
-                  <Link href="/my-listings" className="px-5 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors">
-                    My Listings
-                  </Link>
-                  <Link href="/my-bookings" className="px-5 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors">
-                    My Bookings
-                  </Link>
-                  <div className="h-px bg-gray-100 my-1 mx-2"></div>
-                  <button className="px-5 py-2.5 text-sm font-medium text-red-500 hover:bg-red-50 hover:text-red-600 text-left transition-colors">
-                    Sign out
-                  </button>
-                </div>
-              )}
             </div>
           )}
         </div>
@@ -215,16 +225,7 @@ const Navber = ({ isAuthenticated = false, user = { name: "Alex M.", initial: "A
               </Link>
             </li>
 
-             {/* add tre romm for cheak */}
 
-          <li>
-            <Link href="/add-room" className={getMobileLinkClass("/add-room")} onClick={toggleMenu}>
-              Add Room
-            </Link>
-          </li>
-
-
-          {/* end */}
           
             {isAuthenticated && (
               <>
@@ -250,13 +251,20 @@ const Navber = ({ isAuthenticated = false, user = { name: "Alex M.", initial: "A
           {isAuthenticated ? (
             <div className="flex flex-col gap-3 mt-2 pt-4 border-t theme-border">
               <div className="flex items-center gap-3 px-2">
-                <div className="w-10 h-10 rounded-full bg-[#E58B19] text-white flex items-center justify-center font-bold">
-                  {user.initial}
+                <div className="w-10 h-10 rounded-full bg-[#E58B19] text-white flex items-center justify-center font-bold overflow-hidden">
+                  {user?.image ? (
+                    <Image width={200} height={200} src={user.image} alt={user.name || "User"} className="w-full h-full object-cover" />
+                  ) : (
+                    initial
+                  )}
                 </div>
-                <span className="text-sm font-semibold theme-text">{user.name}</span>
+                <span className="text-sm font-semibold theme-text">{user?.name}</span>
               </div>
-              <button className="w-full text-center py-3 border border-red-100 dark:border-red-900/30 text-red-500 rounded-xl hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors font-semibold">
-                Sign out
+              <button 
+                onClick={handleSignOut}
+                className="w-full text-center py-3 border border-red-100 dark:border-red-900/30 text-red-500 rounded-xl hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors font-semibold"
+              >
+                Logout
               </button>
             </div>
           ) : (

@@ -8,34 +8,25 @@ import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { authClient } from "@/lib/auth-client";
+import { FcGoogle } from 'react-icons/fc';
 
 const RegisterPage = () => {
   const router = useRouter();
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    photoUrl: '',
-  });
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const hasMinLength = formData.password.length >= 6;
-  const hasUppercase = /[A-Z]/.test(formData.password);
-  const hasLowercase = /[a-z]/.test(formData.password);
-  
-  const isFormValid = formData.name && formData.email && hasMinLength && hasUppercase && hasLowercase;
+  const hasMinLength = password.length >= 6;
+  const hasUppercase = /[A-Z]/.test(password);
+  const hasLowercase = /[a-z]/.test(password);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!isFormValid) {
+    
+    const formData = new FormData(e.currentTarget);
+    const user = Object.fromEntries(formData.entries());
+    console.log(user);
+    
+    if (!user.name || !user.email || !hasMinLength || !hasUppercase || !hasLowercase) {
       toast.error("Please fill all required fields correctly.");
       return;
     }
@@ -44,10 +35,10 @@ const RegisterPage = () => {
 
     try {
       const { data, error } = await authClient.signUp.email({
-        email: formData.email,
-        password: formData.password,
-        name: formData.name,
-        image: formData.photoUrl || undefined,
+        email: user.email,
+        password: user.password,
+        name: user.name,
+        image: user.photoUrl || undefined,
       });
 
       if (error) {
@@ -127,8 +118,6 @@ const RegisterPage = () => {
                 <input 
                   type="text"
                   name="name"
-                  value={formData.name}
-                  onChange={handleChange}
                   placeholder="Your full name"
                   className="w-full bg-[#2a2a2a] text-white placeholder-gray-500 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all border border-transparent focus:border-amber-500 text-sm"
                   required
@@ -141,8 +130,6 @@ const RegisterPage = () => {
                 <input 
                   type="email"
                   name="email"
-                  value={formData.email}
-                  onChange={handleChange}
                   placeholder="your@university.edu"
                   className="w-full bg-[#2a2a2a] text-white placeholder-gray-500 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all border border-transparent focus:border-amber-500 text-sm"
                   required
@@ -155,8 +142,6 @@ const RegisterPage = () => {
                 <input 
                   type="text"
                   name="photoUrl"
-                  value={formData.photoUrl}
-                  onChange={handleChange}
                   placeholder="https://... (optional)"
                   className="w-full bg-[#2a2a2a] text-white placeholder-gray-500 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all border border-transparent focus:border-amber-500 text-sm"
                 />
@@ -168,8 +153,8 @@ const RegisterPage = () => {
                 <input 
                   type="password"
                   name="password"
-                  value={formData.password}
-                  onChange={handleChange}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   placeholder="Create a strong password"
                   className="w-full bg-[#2a2a2a] text-white placeholder-gray-500 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all border border-transparent focus:border-amber-500 text-sm"
                   required
@@ -199,14 +184,25 @@ const RegisterPage = () => {
               <Button
                 type="submit"
                 isLoading={loading}
-                isDisabled={!isFormValid}
-                className={`w-full mt-4 font-semibold py-6 rounded-xl transition-all ${
-                  isFormValid 
-                    ? 'bg-[#E58B19] hover:bg-[#D97706] text-white shadow-lg shadow-[#E58B19]/30 border border-transparent' 
-                    : 'bg-gray-200 text-gray-600 border border-gray-300 shadow-sm dark:bg-zinc-800 dark:text-zinc-400 dark:border-zinc-700 cursor-not-allowed'
-                }`}
+                className="w-full mt-4 font-semibold py-6 rounded-xl transition-all bg-[#E58B19] hover:bg-[#D97706] text-white shadow-lg shadow-[#E58B19]/30 border border-transparent"
               >
                 Create Account
+              </Button>
+
+              <div className="flex items-center gap-4 my-2">
+                <div className="flex-1 h-px bg-gray-200 dark:bg-gray-800"></div>
+                <span className="text-xs text-gray-400 font-medium">or continue with</span>
+                <div className="flex-1 h-px bg-gray-200 dark:bg-gray-800"></div>
+              </div>
+              
+              <Button
+                type="button"
+                onClick={() => toast("Google sign-in coming soon!")}
+                className="w-full bg-white dark:bg-[#2a2a2a] hover:bg-gray-50 dark:hover:bg-[#333333] text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 font-medium py-6 rounded-xl transition-all flex items-center justify-center gap-3"
+              >
+                
+                <FcGoogle></FcGoogle>
+                Continue with Google
               </Button>
 
               <div className="text-center mt-3">

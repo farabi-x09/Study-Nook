@@ -26,6 +26,7 @@ export default function RootLayout({ children }) {
     <html
       lang="en"
       className={`${inter.variable} ${playfair.variable} antialiased w-full`}
+      suppressHydrationWarning
     >
       <body className="min-h-screen flex flex-col overflow-x-hidden w-full">
          <Navber />
