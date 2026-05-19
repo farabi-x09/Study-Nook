@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { MapPin, Users, Clock, BarChart3, Heart } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 const COLORS = {
   amber: '#F59E0B',
@@ -29,23 +30,23 @@ const AMENITY_COLORS = {
 export default function RoomCard({ room, onView, onSave }) {
   const [isSaved, setIsSaved] = useState(false);
   const [imgSrc, setImgSrc] = useState(
-    room.imageUrl || room.image || 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&q=80&w=600'
+    room.imageUrl ||  'https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&q=80&w=600'
   );
 
   React.useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setImgSrc(room.imageUrl || room.image || 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&q=80&w=600');
+    setImgSrc(room.imageUrl ||  'https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&q=80&w=600');
   }, [room.imageUrl, room.image]);
 
   return (
     <div 
       className="theme-card rounded-2xl border overflow-hidden flex flex-col group transition-all hover:-translate-y-1 hover:shadow-xl cursor-pointer" 
-      onClick={() => onView(room)}
+      onClick={() => onView && onView(room)}
     >
       <div className="relative h-44 overflow-hidden">
         <Image 
           src={imgSrc} 
-          alt={room.name || room.roomName || 'Room Image'} 
+          alt={room.name ||  'Room Image'} 
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           onError={() => {
@@ -55,7 +56,7 @@ export default function RoomCard({ room, onView, onSave }) {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-gray-900/30 to-transparent"></div>
         <div className="absolute top-4 right-4 theme-card text-amber-900 dark:text-amber-500 bg-white/95 dark:bg-[#1C1410]/95 text-xs font-bold px-3 py-1.5 rounded-lg border">
-          ${room.rate || room.hourlyRate}/hr
+          ${ room.hourlyRate}/hr
         </div>
         <div className="absolute bottom-3 left-3 bg-gradient-to-r from-amber-400 to-amber-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-2">
           <MapPin size={11} /> Floor {room.floor}
@@ -64,7 +65,7 @@ export default function RoomCard({ room, onView, onSave }) {
 
       <div className="p-4 flex-1 flex flex-col gap-3">
         <div>
-          <h3 className="font-bold theme-text text-base">{room.name || room.roomName || 'Unnamed Room'}</h3>
+          <h3 className="font-bold theme-text text-base">{room.name || 'Unnamed Room'}</h3>
           <p className="theme-text-muted text-sm mt-1 leading-relaxed line-clamp-2">
             {room.description || 'No description available'}
           </p>
@@ -72,7 +73,7 @@ export default function RoomCard({ room, onView, onSave }) {
 
         <div className="flex gap-4 text-xs theme-text-muted">
           <span className="flex items-center gap-1">
-            <Users size={13} /> {room.seats || room.capacity || 'N/A'} seats
+            <Users size={13} /> { room.capacity || 'N/A'} seats
           </span>
           <span className="flex items-center gap-1">
             <Clock size={13} /> {room.openHours || '8am'}-{room.closeHours || '8pm'}
@@ -97,9 +98,16 @@ export default function RoomCard({ room, onView, onSave }) {
       </div>
 
       <div className="px-4 pb-4 flex gap-2">
-        <button className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-600 text-white font-semibold text-sm hover:shadow-lg transition-all">
-          View Details
-        </button>
+        
+        <Link
+          href={`/rooms/${room._id}`}
+          className="flex-1"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <button className="w-full py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-600 text-white font-semibold text-sm hover:shadow-lg transition-all">
+            View Details
+          </button>
+        </Link>
         <button
           onClick={(e) => { 
             e.stopPropagation(); 
