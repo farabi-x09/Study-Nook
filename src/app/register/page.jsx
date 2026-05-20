@@ -45,7 +45,11 @@ const RegisterPage = () => {
         toast.error(error.message || "Registration failed");
       } else {
         toast.success("Account created successfully!");
-        router.push("/signin");
+        let search = "";
+        if (typeof window !== "undefined" && window.location.search) {
+          search = window.location.search;
+        }
+        router.push("/signin" + search);
       }
     } catch (error) {
       toast.error("An unexpected error occurred");
@@ -65,8 +69,15 @@ const RegisterPage = () => {
   };
 
 const handleGoogleSignIn = async () => { 
+    let targetUrl = "/";
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      targetUrl = params.get("callbackUrl") || "/";
+    }
+    const callbackURL = new URL(targetUrl, window.location.origin).toString();
     await authClient.signIn.social({
-      provider: "google"
+      provider: "google",
+      callbackURL: callbackURL
     })
 };
 
@@ -214,7 +225,7 @@ const handleGoogleSignIn = async () => {
               <div className="text-center mt-3">
                 <p className="text-[13px] theme-text-muted">
                   Already have an account?{' '}
-                  <Link href="/signin" className="text-[#E58B19] dark:text-[#FBBF24] font-semibold hover:underline">
+                  <Link href={`/signin${typeof window !== 'undefined' && window.location.search ? window.location.search : ''}`} className="text-[#E58B19] dark:text-[#FBBF24] font-semibold hover:underline">
                     Sign in
                   </Link>
                 </p>

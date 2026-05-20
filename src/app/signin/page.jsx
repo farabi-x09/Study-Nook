@@ -36,7 +36,12 @@ const SignInPage = () => {
         toast.error(error.message || "Invalid credentials");
       } else {
         toast.success("Welcome back!");
-        router.push("/");
+        let targetUrl = "/";
+        if (typeof window !== "undefined") {
+          const params = new URLSearchParams(window.location.search);
+          targetUrl = params.get("callbackUrl") || "/";
+        }
+        router.push(targetUrl);
       }
     } catch (error) {
       toast.error("An unexpected error occurred");
@@ -57,8 +62,15 @@ const SignInPage = () => {
 
 
 const handleGoogleSignIn = async () => { 
+    let targetUrl = "/";
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      targetUrl = params.get("callbackUrl") || "/";
+    }
+    const callbackURL = new URL(targetUrl, window.location.origin).toString();
     await authClient.signIn.social({
-      provider: "google"
+      provider: "google",
+      callbackURL: callbackURL
     })
 };
 
@@ -160,7 +172,7 @@ const handleGoogleSignIn = async () => {
               <div className="text-center mt-2">
                 <p className="text-[13px] theme-text-muted">
                   Don{"'"}t have an account?{' '}
-                  <Link href="/register" className="text-[#E58B19] dark:text-[#FBBF24] font-semibold hover:underline">
+                  <Link href={`/register${typeof window !== 'undefined' && window.location.search ? window.location.search : ''}`} className="text-[#E58B19] dark:text-[#FBBF24] font-semibold hover:underline">
                     Register free
                   </Link>
                 </p>

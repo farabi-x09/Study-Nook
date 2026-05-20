@@ -17,7 +17,7 @@ const Navber = () => {
   const { 
         data: session//refetch the session
     } = authClient.useSession() 
-  console.log(session);
+  // console.log(session);
   const user = session?.user;
   const isAuthenticated = mounted && !!session;
   const initial = user?.name ? user.name.charAt(0).toUpperCase() : "U";
@@ -144,15 +144,18 @@ const Navber = () => {
           </button>
 
           {!isAuthenticated ? (
+            (() => {
+              const safeCallback = (pathname === "/signin" || pathname === "/register") ? "/" : pathname;
+              return (
             <div className="flex gap-3 text-sm font-semibold">
-              <Link href="/signin" className={
+              <Link href={`/signin?callbackUrl=${encodeURIComponent(safeCallback)}`} className={
                 pathname === "/signin" 
                   ? "px-6 py-2.5 rounded-full font-semibold transition-all bg-[#FEF3C7] dark:bg-amber-950/40 text-[#B45309] dark:text-[#FBBF24]"
                   : "px-6 py-2.5 border theme-border rounded-full theme-text hover:bg-amber-500/10 transition-all font-semibold"
               }>
                 Login
               </Link>
-              <Link href="/register" className={
+              <Link href={`/register?callbackUrl=${encodeURIComponent(safeCallback)}`} className={
                 pathname === "/register"
                  ? "px-6 py-2.5 rounded-full font-semibold transition-all bg-[#FEF3C7] dark:bg-amber-950/40 text-[#B45309] dark:text-[#FBBF24]"
                   : "px-6 py-2.5 border theme-border rounded-full theme-text hover:bg-amber-500/10 transition-all font-semibold"
@@ -160,6 +163,8 @@ const Navber = () => {
                 Register
               </Link>
             </div>
+              );
+            })()
           ) : (
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2 border border-gray-200 dark:border-amber-900/30 py-1 px-3 pr-2 rounded-full bg-white dark:bg-amber-950/10 shadow-sm">
@@ -269,20 +274,27 @@ const Navber = () => {
             </div>
           ) : (
             <div className="flex gap-3 mt-4">
-              <Link href="/signin" className={
+              {(() => {
+                const safeCallback = (pathname === "/signin" || pathname === "/register") ? "/" : pathname;
+                return (
+                  <>
+              <Link href={`/signin?callbackUrl=${encodeURIComponent(safeCallback)}`} className={
                 pathname === "/signin" 
                   ? "flex-1 text-center py-2.5 rounded-xl font-semibold transition-all bg-[#FEF3C7] dark:bg-amber-950/40 text-[#B45309] dark:text-[#FBBF24]"
                   : "flex-1 text-center py-2.5 border theme-border rounded-xl theme-text hover:bg-amber-500/10 font-semibold transition-all"
               } onClick={toggleMenu}>
                 Login
               </Link>
-              <Link href="/register" className={
+              <Link href={`/register?callbackUrl=${encodeURIComponent(safeCallback)}`} className={
                 pathname === "/register"
                   ? "flex-1 text-center py-2.5 rounded-xl font-semibold transition-all bg-[#FEF3C7] dark:bg-amber-950/40 text-[#B45309] dark:text-[#FBBF24]"
                   : "flex-1 text-center py-2.5 border theme-border rounded-xl theme-text hover:bg-amber-500/10 font-semibold transition-all"
               } onClick={toggleMenu}>
                 Register
               </Link>
+                  </>
+                );
+              })()}
             </div>
           )}
         </div>
