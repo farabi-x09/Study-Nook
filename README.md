@@ -1,36 +1,26 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# StudyNook – Library Study Room Booking
 
-## Getting Started
+**Live Site URL**: [https://studynook-app.vercel.app/](https://studynook-app.vercel.app/) *(Placeholder)*
 
-First, run the development server:
+StudyNook is a full‑stack web application designed for students and library users to easily find, list, and reserve private study rooms. Whether you need a quiet zone for deep work or a collaboration bay equipped with a whiteboard and projector, StudyNook simplifies the process while ensuring a secure and conflict-free booking experience.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Conflict-Free Booking System**: Automatically detects overlapping time slots to prevent double-booking of any study room.
+- **Secure Authentication**: Utilizes JSON Web Tokens (JWT) stored safely in HTTP-only cookies to protect user sessions and private routes.
+- **Dynamic Search & Filtering**: Instantly search for rooms by name or filter down by specific amenities and pricing to find the perfect focus space.
+- **Complete Dashboard**: Registered users can effortlessly manage their own listings, track their upcoming study sessions, and cancel future reservations.
+- **Responsive & Modern Design**: Built with Next.js, Framer Motion, and Tailwind CSS to ensure a beautiful, fast, and seamless experience across mobile, tablet, and desktop.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## Technologies Used
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Frontend**: Next.js (App Router), React, Tailwind CSS, Framer Motion, HeroUI
+- **Backend**: Node.js, Express, MongoDB (MongoDB Driver)
+- **Authentication**: Better-Auth, JSON Web Tokens (jsonwebtoken)
+- **Security**: HTTP-Only Cookies, CORS configuration
 
-## Learn More
+## Setup Instructions
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Clone the repository and run `npm install` in both the client and server directories.
+2. Set up your `.env` files with `MONGODB_URI`, `JWT_SECRET`, and `BETTER_AUTH_SECRET`.
+3. Run `npm run dev` in both directories to start the frontend and backend servers simultaneously.

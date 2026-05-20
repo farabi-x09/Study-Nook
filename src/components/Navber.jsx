@@ -30,6 +30,25 @@ const Navber = () => {
     setTheme(savedTheme);
   }, []);
 
+  // Generate custom JWT for the backend (Assignment requirement)
+  useEffect(() => {
+    if (session?.user) {
+      const hasJwt = localStorage.getItem('hasCustomJwt');
+      if (!hasJwt) {
+        fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/jwt`, {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: session.user.email, id: session.user.id })
+        }).then(() => {
+          localStorage.setItem('hasCustomJwt', 'true');
+        }).catch(console.error);
+      }
+    } else if (session === null) {
+      localStorage.removeItem('hasCustomJwt');
+    }
+  }, [session]);
+
   // Apply theme to document element
   useEffect(() => {
     const root = window.document.documentElement;
@@ -50,6 +69,10 @@ const Navber = () => {
 
   const handleSignOut = async () => {
     try {
+      // Clear custom JWT cookie from backend
+      await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/logout`, { method: 'POST', credentials: 'include' });
+      localStorage.removeItem('hasCustomJwt');
+
       await authClient.signOut({
         fetchOptions: {
           onSuccess: () => {

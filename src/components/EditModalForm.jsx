@@ -21,6 +21,7 @@ import {
   Card
 } from '@heroui/react';
 import toast from 'react-hot-toast';
+import { authClient } from '@/lib/auth-client';
 
 const amenitiesList = [
   'Whiteboard',
@@ -75,9 +76,12 @@ export default function EditModalForm({ room, onClose, onUpdated }) {
         amenities: formData.amenities || []
       };
 
-      const res = await fetch(`http://localhost:5000/room/${room._id || room.id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/room/${room._id || room.id}`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json'
+        },
         body: JSON.stringify(mappedData),
       });
       const data = await res.json();

@@ -29,19 +29,29 @@ const getHours = (b) => {
   return e > s ? e - s : 0;
 };
 
+export const metadata = {
+  title: "StudyNook – My Bookings",
+};
+
 export default async function MyBookingsPage() {
   const session = await auth.api.getSession({ headers: await headers() });
   const user = session?.user;
 
   if (!user) redirect('/signin?callbackUrl=%2Fmy-bookings');
 
-  const res = await fetch(`http://localhost:5000/booking?email=${user.email}`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/booking?email=${user.email}`, {
     cache: 'no-store',
+    headers: {
+      cookie: (await headers()).get('cookie') || ''
+    }
   });
   const bookings = await res.json();
+  console.log("Bookings API response:", bookings);
+  
+  const bookingsArray = Array.isArray(bookings) ? bookings : [];
 
   // Sort: confirmed first, then by date desc
-  const sorted = [...bookings].sort((a, b) => {
+  const sorted = [...bookingsArray].sort((a, b) => {
     if (a.status === 'confirmed' && b.status !== 'confirmed') return -1;
     if (a.status !== 'confirmed' && b.status === 'confirmed') return 1;
     return new Date(b.date) - new Date(a.date);

@@ -4,10 +4,17 @@ import { useState } from 'react';
 import { Pencil } from 'lucide-react';
 import EditModalForm from '@/components/EditModalForm';
 import { useRouter } from 'next/navigation';
+import { authClient } from '@/lib/auth-client';
 
 export default function EditRoomButton({ room }) {
   const [open, setOpen] = useState(false);
   const router = useRouter();
+  const { data: session } = authClient.useSession();
+  
+  // Only render if the current user is the owner of the room
+  if (!session?.user || session.user.email !== room.userEmail) {
+    return null;
+  }
 
   return (
     <>

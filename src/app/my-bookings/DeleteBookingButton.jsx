@@ -5,6 +5,7 @@ import { Trash2, AlertTriangle, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
+import { authClient } from '@/lib/auth-client';
 
 export default function DeleteBookingButton({ booking }) {
   const router = useRouter();
@@ -26,8 +27,9 @@ export default function DeleteBookingButton({ booking }) {
   const handleDelete = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`http://localhost:5000/booking/${booking._id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/${booking._id}`, {
         method: 'DELETE',
+        credentials: 'include'
       });
       if (!res.ok) throw new Error('Failed to delete booking');
       toast.success('Booking deleted.');

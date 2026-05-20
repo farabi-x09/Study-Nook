@@ -5,6 +5,9 @@ import EditRoomButton from './EditRoomButton';
 import DeleteRoomButton from './DeleteRoomButton';
 import BookNowButton from './BookNowButton';
 
+import { headers } from 'next/headers';
+import { auth } from '@/lib/auth';
+
 const AMENITY_ICONS = {
   'Wi-Fi': Wifi,
   'Air Con': Wind,
@@ -29,14 +32,25 @@ const AMENITY_COLORS = {
 const FALLBACK_IMAGE =
   'https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&q=80&w=1200';
 
+export async function generateMetadata() {
+  return {
+    title: "StudyNook – Room Details"
+  };
+}
+
 export default async function RoomDetailPage({ params }) {
   const { id } = await params;
-
+  
   let room = null;
   let error = null;
 
   try {
-    const res = await fetch(`http://localhost:5000/room/${id}`, { cache: 'no-store' });
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/room/${id}`, { 
+      cache: 'no-store',
+      headers: {
+        cookie: (await headers()).get('cookie') || ''
+      }
+    });
     if (!res.ok) throw new Error(`Server responded with ${res.status}`);
     room = await res.json();
   } catch (err) {

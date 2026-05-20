@@ -5,17 +5,25 @@ import { Trash2, X, AlertTriangle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
+import { authClient } from '@/lib/auth-client';
 
 export default function DeleteRoomButton({ room }) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const { data: session } = authClient.useSession();
+
+  // Only render if the current user is the owner of the room
+  if (!session?.user || session.user.email !== room.userEmail) {
+    return null;
+  }
 
   const handleDelete = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`http://localhost:5000/room/${room._id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/room/${room._id}`, {
         method: 'DELETE',
+        credentials: 'include'
       });
       if (!res.ok) throw new Error('Failed to delete room');
       toast.success('Room deleted successfully');

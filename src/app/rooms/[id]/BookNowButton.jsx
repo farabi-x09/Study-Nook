@@ -84,8 +84,9 @@ export default function BookNowButton({ room }) {
     setLoading(true);
 
     try {
-      const res = await fetch('http://localhost:5000/booking', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/booking`, {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },

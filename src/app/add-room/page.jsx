@@ -20,12 +20,13 @@ import {
   Card
 } from "@heroui/react";
 import toast from 'react-hot-toast';
+import { authClient } from '@/lib/auth-client';
 import { useRouter } from 'next/navigation';
 
 const AddRoomPage = () => {
 
 
-
+  const { data: session } = authClient.useSession();
   const router = useRouter();
   const [formData, setFormData] = useState({
     roomName: '',
@@ -82,18 +83,20 @@ const AddRoomPage = () => {
       description: raw.description,
       imageUrl: raw.image,
       floor: raw.floor,
-      capacity: raw.capacity,
-      hourlyRate: raw.hourlyRate,
-      amenities: formData.amenities // Use state for amenities since they aren't standard form inputs
+      capacity: parseInt(raw.capacity, 10) || 0,
+      hourlyRate: parseFloat(raw.hourlyRate) || 0,
+      amenities: formData.amenities, // Use state for amenities since they aren't standard form inputs
+      userEmail: session?.user?.email || '',
     };
-
-    const res = await fetch('http://localhost:5000/room',{
+    
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/room`,{
       method: 'POST',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(room),
-    } )
+    })
     const data = await res.json();
     console.log(data);
       toast.success('Room added successfully');

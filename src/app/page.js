@@ -3,6 +3,10 @@ import AvailableRoomsSection from "@/components/AvailableRoomsSection";
 import WhyStudyNookSection from "@/components/WhyStudyNookSection";
 import HowItWorksSection from "@/components/HowItWorksSection";
 
+export const metadata = {
+  title: "StudyNook – Home",
+};
+
 export default function Home() {
   return (
     <div>

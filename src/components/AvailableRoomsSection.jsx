@@ -104,7 +104,7 @@ function RoomCardStatic({ room }) {
 export default async function AvailableRoomsSection() {
   let rooms = [];
   try {
-    const res = await fetch('http://localhost:5000/room?sort=latest&limit=6', {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/room?sort=latest&limit=6`, {
       cache: 'no-store',
     });
     rooms = await res.json();
