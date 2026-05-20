@@ -94,7 +94,7 @@ const Navber = () => {
         </div>
 
         {/* Desktop Navigation Links */}
-        <ul className="hidden md:flex items-center gap-2 text-sm font-medium">
+        <ul className="hidden lg:flex items-center gap-2 text-sm font-medium">
           <li>
             <Link href="/" className={getLinkClass("/")}>
               Home
@@ -110,7 +110,7 @@ const Navber = () => {
           {isAuthenticated && (
             <>
               <li>
-                <Link href="/add-room" className={getLinkClass("/add-room")}>
+                <Link  href="/add-room" className={getLinkClass("/add-room")}>
                   Add Room
                 </Link>
               </li>
@@ -129,7 +129,7 @@ const Navber = () => {
         </ul>
 
         {/* Desktop Auth / User Links */}
-        <div className="hidden md:flex items-center gap-3 relative">
+        <div className="hidden lg:flex items-center gap-3 relative">
           {/* Theme Toggle Button */}
           <button 
             onClick={toggleTheme}
@@ -165,7 +165,7 @@ const Navber = () => {
               <div className="flex items-center gap-2 border border-gray-200 dark:border-amber-900/30 py-1 px-3 pr-2 rounded-full bg-white dark:bg-amber-950/10 shadow-sm">
                 <div className="w-8 h-8 rounded-full bg-[#E58B19] text-white flex items-center justify-center font-bold text-sm overflow-hidden">
                   {user?.image ? (
-                    <Image width={200} height={200} src={user.image} alt={user.name || "User"} className="w-full h-full object-cover" />
+                    <Image referrerPolicy="no-referrer" width={200} height={200} src={user.image} alt={user.name || "User"} className="w-full h-full object-cover" />
                   ) : (
                     initial
                   )}
@@ -183,7 +183,7 @@ const Navber = () => {
         </div>
 
         {/* Mobile Menu Toggle Button */}
-        <div className="md:hidden flex items-center gap-2">
+        <div className="lg:hidden flex items-center gap-2">
           {/* Theme Toggle Button (Mobile) */}
           <button 
             onClick={toggleTheme}
@@ -212,7 +212,7 @@ const Navber = () => {
 
       {/* Mobile Navigation Menu (Drawer) */}
       {isOpen && (
-        <div className="md:hidden mt-4 border-t theme-border pt-4 flex flex-col gap-3 w-full">
+        <div className="lg:hidden mt-4 border-t theme-border pt-4 flex flex-col gap-3 w-full">
           <ul className="flex flex-col gap-1.5 text-sm font-medium">
             <li>
               <Link href="/" className={getMobileLinkClass("/")} onClick={toggleMenu}>
@@ -253,7 +253,7 @@ const Navber = () => {
               <div className="flex items-center gap-3 px-2">
                 <div className="w-10 h-10 rounded-full bg-[#E58B19] text-white flex items-center justify-center font-bold overflow-hidden">
                   {user?.image ? (
-                    <Image width={200} height={200} src={user.image} alt={user.name || "User"} className="w-full h-full object-cover" />
+                    <Image referrerPolicy="no-referrer"  width={200} height={200} src={user.image} alt={user.name || "User"} className="w-full h-full object-cover" />
                   ) : (
                     initial
                   )}

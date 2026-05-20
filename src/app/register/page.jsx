@@ -64,6 +64,12 @@ const RegisterPage = () => {
     }
   };
 
+const handleGoogleSignIn = async () => { 
+    await authClient.signIn.social({
+      provider: "google"
+    })
+};
+
   return (
     <div className="min-h-[calc(100vh-80px)] py-12 px-4 sm:px-6 lg:px-8 font-sans transition-colors duration-300 flex items-center justify-center">
       <motion.div
@@ -197,7 +203,7 @@ const RegisterPage = () => {
               
               <Button
                 type="button"
-                onClick={() => toast("Google sign-in coming soon!")}
+                onClick={handleGoogleSignIn}
                 className="w-full bg-white dark:bg-[#2a2a2a] hover:bg-gray-50 dark:hover:bg-[#333333] text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 font-medium py-6 rounded-xl transition-all flex items-center justify-center gap-3"
               >
                 
