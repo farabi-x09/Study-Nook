@@ -46,7 +46,6 @@ export default async function MyBookingsPage() {
     }
   });
   const bookings = await res.json();
-  console.log("Bookings API response:", bookings);
   
   const bookingsArray = Array.isArray(bookings) ? bookings : [];
 

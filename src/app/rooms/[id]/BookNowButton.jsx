@@ -10,9 +10,8 @@ import { useRouter } from 'next/navigation';
 export default function BookNowButton({ room }) {
   const router = useRouter();
   const {
-    data: session//refetch the session
-  } = authClient.useSession()
-  console.log(session);
+    data: session
+  } = authClient.useSession();
   const user = session?.user;
 
   const [open, setOpen] = useState(false);

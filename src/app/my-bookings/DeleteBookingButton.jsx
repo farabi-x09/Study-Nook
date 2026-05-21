@@ -27,7 +27,7 @@ export default function DeleteBookingButton({ booking }) {
   const handleDelete = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/${booking._id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/booking/${booking._id}`, {
         method: 'DELETE',
         credentials: 'include'
       });

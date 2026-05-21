@@ -97,10 +97,9 @@ const AddRoomPage = () => {
       },
       body: JSON.stringify(room),
     })
-    const data = await res.json();
-    console.log(data);
-      toast.success('Room added successfully');
-      router.push('/rooms');
+    await res.json();
+    toast.success('Room added successfully');
+    router.push('/rooms');
    
   };
 
