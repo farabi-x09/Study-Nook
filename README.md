@@ -1,6 +1,6 @@
 # StudyNook – Library Study Room Booking
 
-**Live Site URL**: [https://studynook-app.vercel.app/](https://studynook-app.vercel.app/) *(Placeholder)*
+**Live Site URL**: https://study-nook-pi.vercel.app
 
 StudyNook is a full‑stack web application designed for students and library users to easily find, list, and reserve private study rooms. Whether you need a quiet zone for deep work or a collaboration bay equipped with a whiteboard and projector, StudyNook simplifies the process while ensuring a secure and conflict-free booking experience.
 
