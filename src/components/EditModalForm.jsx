@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Building2,
   MapPin,
@@ -11,35 +11,29 @@ import {
   AlignLeft,
   Pencil,
   X,
-  Check
-} from 'lucide-react';
-import {
-  TextField,
-  Label,
-  InputGroup,
-  Button,
-  Card
-} from '@heroui/react';
-import toast from 'react-hot-toast';
-import { authClient } from '@/lib/auth-client';
+  Check,
+} from "lucide-react";
+import { TextField, Label, InputGroup, Button, Card } from "@heroui/react";
+import toast from "react-hot-toast";
+import { authClient } from "@/lib/auth-client";
 
 const amenitiesList = [
-  'Whiteboard',
-  'Projector',
-  'Wi-Fi',
-  'Power Outlets',
-  'Quiet Zone',
-  'Air Conditioning',
+  "Whiteboard",
+  "Projector",
+  "Wi-Fi",
+  "Power Outlets",
+  "Quiet Zone",
+  "Air Conditioning",
 ];
 
 export default function EditModalForm({ room, onClose, onUpdated }) {
   const [formData, setFormData] = useState({
-    roomName: room.name || '',
-    description: room.description || '',
-    image: room.imageUrl || '',
-    floor: room.floor || '',
-    capacity: room.capacity || '',
-    hourlyRate: room.hourlyRate || '',
+    roomName: room.name || "",
+    description: room.description || "",
+    image: room.imageUrl || "",
+    floor: room.floor || "",
+    capacity: room.capacity || "",
+    hourlyRate: room.hourlyRate || "",
     amenities: room.amenities || [],
   });
   const [loading, setLoading] = useState(false);
@@ -73,25 +67,33 @@ export default function EditModalForm({ room, onClose, onUpdated }) {
         floor: formData.floor,
         capacity: formData.capacity,
         hourlyRate: formData.hourlyRate,
-        amenities: formData.amenities || []
+        amenities: formData.amenities || [],
       };
 
-      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/room/${room._id || room.id}`, {
-        method: 'PATCH',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(mappedData),
+      const tokenRes = await fetch("/api/auth/token", {
+        credentials: "include",
       });
+      const { token } = await tokenRes.json();
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/room/${room._id || room.id}`,
+        {
+          method: "PATCH",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(mappedData),
+        },
+      );
       const data = await res.json();
-      console.log(data);    
-      if (!res.ok) throw new Error('Failed to update room');
-      toast.success('Room updated successfully!');
+      console.log(data);
+      if (!res.ok) throw new Error("Failed to update room");
+      toast.success("Room updated successfully!");
       onUpdated && onUpdated();
       onClose();
     } catch (err) {
-      toast.error(err.message || 'Something went wrong');
+      toast.error(err.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -105,7 +107,10 @@ export default function EditModalForm({ room, onClose, onUpdated }) {
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         className="fixed inset-0 z-50 flex items-center justify-center p-4"
-        style={{ backgroundColor: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)' }}
+        style={{
+          backgroundColor: "rgba(0,0,0,0.6)",
+          backdropFilter: "blur(4px)",
+        }}
         onClick={onClose}
       >
         {/* Modal panel */}
@@ -113,7 +118,7 @@ export default function EditModalForm({ room, onClose, onUpdated }) {
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          transition={{ duration: 0.25, ease: 'easeOut' }}
+          transition={{ duration: 0.25, ease: "easeOut" }}
           className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-[2rem] shadow-2xl"
           onClick={(e) => e.stopPropagation()}
         >
@@ -125,10 +130,23 @@ export default function EditModalForm({ room, onClose, onUpdated }) {
             <div className="bg-amber-500/10 dark:bg-amber-950/20 px-8 py-7 relative overflow-hidden border-b theme-border flex items-start justify-between gap-4">
               {/* Grid BG pattern */}
               <div className="absolute inset-0 opacity-[0.03] text-[#E58B19]">
-                <svg className="h-full w-full" xmlns="http://www.w3.org/2000/svg">
+                <svg
+                  className="h-full w-full"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
                   <defs>
-                    <pattern id="edit-grid" width="32" height="32" patternUnits="userSpaceOnUse">
-                      <path d="M0 32V0h32" fill="none" stroke="currentColor" strokeWidth="1" />
+                    <pattern
+                      id="edit-grid"
+                      width="32"
+                      height="32"
+                      patternUnits="userSpaceOnUse"
+                    >
+                      <path
+                        d="M0 32V0h32"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1"
+                      />
                     </pattern>
                   </defs>
                   <rect width="100%" height="100%" fill="url(#edit-grid)" />
@@ -141,11 +159,11 @@ export default function EditModalForm({ room, onClose, onUpdated }) {
                 </div>
                 <h2
                   className="text-2xl font-bold theme-text"
-                  style={{ fontFamily: 'var(--font-playfair)' }}
+                  style={{ fontFamily: "var(--font-playfair)" }}
                 >
-                  Update{' '}
+                  Update{" "}
                   <span className="text-[#E58B19] dark:text-[#FBBF24]">
-                    {room.name || 'Room'}
+                    {room.name || "Room"}
                   </span>
                 </h2>
                 <p className="theme-text-muted text-sm mt-1">
@@ -165,11 +183,15 @@ export default function EditModalForm({ room, onClose, onUpdated }) {
             {/* Form */}
             <form onSubmit={handleSubmit}>
               <div className="px-8 py-8 flex flex-col gap-6 theme-text">
-
                 {/* Name */}
                 <TextField isRequired className="w-full flex flex-col gap-1.5">
-                  <Label className="block text-sm font-semibold theme-text-muted">Name</Label>
-                  <InputGroup fullWidth className="theme-border focus-within:border-[#E58B19] focus-within:!ring-[#E58B19] theme-input rounded-xl">
+                  <Label className="block text-sm font-semibold theme-text-muted">
+                    Name
+                  </Label>
+                  <InputGroup
+                    fullWidth
+                    className="theme-border focus-within:border-[#E58B19] focus-within:!ring-[#E58B19] theme-input rounded-xl"
+                  >
                     <InputGroup.Prefix className="pl-3 pr-2 text-gray-400 flex items-center">
                       <Building2 size={18} />
                     </InputGroup.Prefix>
@@ -185,8 +207,13 @@ export default function EditModalForm({ room, onClose, onUpdated }) {
 
                 {/* Description */}
                 <TextField isRequired className="w-full flex flex-col gap-1.5">
-                  <Label className="block text-sm font-semibold theme-text-muted">Description</Label>
-                  <InputGroup fullWidth className="theme-border focus-within:border-[#E58B19] focus-within:!ring-[#E58B19] theme-input rounded-xl">
+                  <Label className="block text-sm font-semibold theme-text-muted">
+                    Description
+                  </Label>
+                  <InputGroup
+                    fullWidth
+                    className="theme-border focus-within:border-[#E58B19] focus-within:!ring-[#E58B19] theme-input rounded-xl"
+                  >
                     <InputGroup.Prefix className="pl-3 pr-2 pt-3 text-gray-400 flex items-start">
                       <AlignLeft size={18} />
                     </InputGroup.Prefix>
@@ -203,8 +230,13 @@ export default function EditModalForm({ room, onClose, onUpdated }) {
 
                 {/* Image URL */}
                 <TextField className="w-full flex flex-col gap-1.5">
-                  <Label className="block text-sm font-semibold theme-text-muted">Image URL</Label>
-                  <InputGroup fullWidth className="theme-border focus-within:border-[#E58B19] focus-within:!ring-[#E58B19] theme-input rounded-xl">
+                  <Label className="block text-sm font-semibold theme-text-muted">
+                    Image URL
+                  </Label>
+                  <InputGroup
+                    fullWidth
+                    className="theme-border focus-within:border-[#E58B19] focus-within:!ring-[#E58B19] theme-input rounded-xl"
+                  >
                     <InputGroup.Prefix className="pl-3 pr-2 text-gray-400 flex items-center">
                       <ImageIcon size={18} />
                     </InputGroup.Prefix>
@@ -222,8 +254,13 @@ export default function EditModalForm({ room, onClose, onUpdated }) {
                 {/* Floor / Capacity / Rate */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <TextField className="w-full flex flex-col gap-1.5">
-                    <Label className="block text-sm font-semibold theme-text-muted">Floor</Label>
-                    <InputGroup fullWidth className="theme-border focus-within:border-[#E58B19] focus-within:!ring-[#E58B19] theme-input rounded-xl">
+                    <Label className="block text-sm font-semibold theme-text-muted">
+                      Floor
+                    </Label>
+                    <InputGroup
+                      fullWidth
+                      className="theme-border focus-within:border-[#E58B19] focus-within:!ring-[#E58B19] theme-input rounded-xl"
+                    >
                       <InputGroup.Prefix className="pl-3 pr-2 text-gray-400 flex items-center">
                         <MapPin size={18} />
                       </InputGroup.Prefix>
@@ -237,9 +274,17 @@ export default function EditModalForm({ room, onClose, onUpdated }) {
                     </InputGroup>
                   </TextField>
 
-                  <TextField isRequired className="w-full flex flex-col gap-1.5">
-                    <Label className="block text-sm font-semibold theme-text-muted">Capacity</Label>
-                    <InputGroup fullWidth className="theme-border focus-within:border-[#E58B19] focus-within:!ring-[#E58B19] theme-input rounded-xl">
+                  <TextField
+                    isRequired
+                    className="w-full flex flex-col gap-1.5"
+                  >
+                    <Label className="block text-sm font-semibold theme-text-muted">
+                      Capacity
+                    </Label>
+                    <InputGroup
+                      fullWidth
+                      className="theme-border focus-within:border-[#E58B19] focus-within:!ring-[#E58B19] theme-input rounded-xl"
+                    >
                       <InputGroup.Prefix className="pl-3 pr-2 text-gray-400 flex items-center">
                         <Users size={18} />
                       </InputGroup.Prefix>
@@ -255,9 +300,17 @@ export default function EditModalForm({ room, onClose, onUpdated }) {
                     </InputGroup>
                   </TextField>
 
-                  <TextField isRequired className="w-full flex flex-col gap-1.5">
-                    <Label className="block text-sm font-semibold theme-text-muted">Hourly Rate ($)</Label>
-                    <InputGroup fullWidth className="theme-border focus-within:border-[#E58B19] focus-within:!ring-[#E58B19] theme-input rounded-xl">
+                  <TextField
+                    isRequired
+                    className="w-full flex flex-col gap-1.5"
+                  >
+                    <Label className="block text-sm font-semibold theme-text-muted">
+                      Hourly Rate ($)
+                    </Label>
+                    <InputGroup
+                      fullWidth
+                      className="theme-border focus-within:border-[#E58B19] focus-within:!ring-[#E58B19] theme-input rounded-xl"
+                    >
                       <InputGroup.Prefix className="pl-3 pr-2 text-gray-400 flex items-center">
                         <DollarSign size={18} />
                       </InputGroup.Prefix>
@@ -277,7 +330,9 @@ export default function EditModalForm({ room, onClose, onUpdated }) {
 
                 {/* Amenities */}
                 <div>
-                  <Label className="block text-sm font-semibold theme-text-muted mb-3">Amenities</Label>
+                  <Label className="block text-sm font-semibold theme-text-muted mb-3">
+                    Amenities
+                  </Label>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                     {amenitiesList.map((amenity) => {
                       const isChecked = formData.amenities.includes(amenity);
@@ -286,8 +341,8 @@ export default function EditModalForm({ room, onClose, onUpdated }) {
                           key={amenity}
                           className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all ${
                             isChecked
-                              ? 'border-[#E58B19] bg-[#E58B19]/10'
-                              : 'theme-border bg-amber-500/5 hover:bg-amber-500/10'
+                              ? "border-[#E58B19] bg-[#E58B19]/10"
+                              : "theme-border bg-amber-500/5 hover:bg-amber-500/10"
                           }`}
                         >
                           <input
@@ -298,12 +353,18 @@ export default function EditModalForm({ room, onClose, onUpdated }) {
                           />
                           <div
                             className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${
-                              isChecked ? 'border-[#E58B19] bg-[#E58B19]' : 'border-[#E58B19] bg-transparent'
+                              isChecked
+                                ? "border-[#E58B19] bg-[#E58B19]"
+                                : "border-[#E58B19] bg-transparent"
                             }`}
                           >
-                            {isChecked && <div className="w-1.5 h-1.5 rounded-full bg-white dark:bg-[#1C1410]" />}
+                            {isChecked && (
+                              <div className="w-1.5 h-1.5 rounded-full bg-white dark:bg-[#1C1410]" />
+                            )}
                           </div>
-                          <span className={`text-sm font-medium transition-colors ${isChecked ? 'text-[#E58B19] dark:text-[#FBBF24]' : 'theme-text-muted'}`}>
+                          <span
+                            className={`text-sm font-medium transition-colors ${isChecked ? "text-[#E58B19] dark:text-[#FBBF24]" : "theme-text-muted"}`}
+                          >
                             {amenity}
                           </span>
                         </label>

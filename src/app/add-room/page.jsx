@@ -88,12 +88,15 @@ const AddRoomPage = () => {
       amenities: formData.amenities, // Use state for amenities since they aren't standard form inputs
       userEmail: session?.user?.email || '',
     };
-    
+
+    const tokenRes = await fetch('/api/auth/token', { credentials: 'include' });
+    const { token } = await tokenRes.json();
     const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/room`,{
       method: 'POST',
       credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
+        'authorization': `Bearer ${token}`,
       },
       body: JSON.stringify(room),
     })

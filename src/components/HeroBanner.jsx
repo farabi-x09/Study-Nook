@@ -70,7 +70,7 @@ const HeroBanner = () => {
 
           {/* Buttons */}
           <motion.div variants={itemVariants} className="flex flex-wrap items-center gap-4 mb-16">
-            <Link href="/explore" className="bg-[#E58B19] hover:bg-[#D97706] text-white px-8 py-3.5 rounded-full font-semibold flex items-center gap-2 transition-all shadow-lg shadow-[#E58B19]/20 group">
+            <Link href="/rooms" className="bg-[#E58B19] hover:bg-[#D97706] text-white px-8 py-3.5 rounded-full font-semibold flex items-center gap-2 transition-all shadow-lg shadow-[#E58B19]/20 group">
               Explore Rooms
               <motion.div
                 whileHover={{ x: 5 }}
@@ -79,7 +79,7 @@ const HeroBanner = () => {
                 <ArrowRight size={18} strokeWidth={2.5} />
               </motion.div>
             </Link>
-            <Link href="/list" className="border border-white/40 hover:border-white hover:bg-white/10 text-white px-8 py-3.5 rounded-full font-semibold transition-all backdrop-blur-sm">
+            <Link href="/add-room" className="border border-white/40 hover:border-white hover:bg-white/10 text-white px-8 py-3.5 rounded-full font-semibold transition-all backdrop-blur-sm">
               List a Room
             </Link>
           </motion.div>

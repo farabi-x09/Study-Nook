@@ -83,11 +83,14 @@ export default function BookNowButton({ room }) {
     setLoading(true);
 
     try {
+      const tokenRes = await fetch('/api/auth/token', { credentials: 'include' });
+      const { token } = await tokenRes.json();
       const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/booking`, {
         method: 'POST',
         credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
+          'authorization': `Bearer ${token}`,
         },
         body: JSON.stringify({
           roomId: room._id || room.id,

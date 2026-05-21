@@ -21,9 +21,14 @@ export default function DeleteRoomButton({ room }) {
   const handleDelete = async () => {
     setLoading(true);
     try {
+      const tokenRes = await fetch('/api/auth/token', { credentials: 'include' });
+      const { token } = await tokenRes.json();
       const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/room/${room._id}`, {
         method: 'DELETE',
-        credentials: 'include'
+        credentials: 'include',
+        headers: {
+          'authorization': `Bearer ${token}`,
+        },
       });
       if (!res.ok) throw new Error('Failed to delete room');
       toast.success('Room deleted successfully');

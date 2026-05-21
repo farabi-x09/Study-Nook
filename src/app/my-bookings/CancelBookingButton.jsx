@@ -27,11 +27,14 @@ export default function CancelBookingButton({ booking }) {
   const handleCancel = async () => {
     setLoading(true);
     try {
+      const tokenRes = await fetch('/api/auth/token', { credentials: 'include' });
+      const { token } = await tokenRes.json();
       const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/booking/${booking._id}`, {
         method: 'PATCH',
         credentials: 'include',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'authorization': `Bearer ${token}`,
         },
         body: JSON.stringify({ status: 'cancelled' }),
       });

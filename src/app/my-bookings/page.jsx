@@ -39,12 +39,30 @@ export default async function MyBookingsPage() {
 
   if (!user) redirect('/signin?callbackUrl=%2Fmy-bookings');
 
+  // Get JWT token from the local Better Auth endpoint to authenticate with the external API
+  const headersList = await headers();
+  const cookieStr = headersList.get('cookie') || '';
+
+  const tokenRes = await fetch(`${process.env.BETTER_AUTH_URL}/api/auth/token`, {
+    headers: { cookie: cookieStr }
+  });
+
+  if (!tokenRes.ok) {
+    throw new Error('Failed to authenticate session');
+  }
+
+  const { token } = await tokenRes.json();
+
   const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/booking?email=${user.email}`, {
     cache: 'no-store',
     headers: {
-      cookie: (await headers()).get('cookie') || ''
+      'Authorization': `Bearer ${token}`,
+      cookie: cookieStr,
     }
   });
+
+  if (!res.ok) throw new Error('Failed to fetch bookings');
+
   const bookings = await res.json();
   
   const bookingsArray = Array.isArray(bookings) ? bookings : [];

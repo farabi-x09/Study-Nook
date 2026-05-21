@@ -64,11 +64,22 @@ export default function MyListingsPage() {
     if (!roomToDelete) return;
     setIsDeleting(true);
     try {
+      const tokenRes = await fetch("/api/auth/token", {
+        credentials: "include",
+      });
+      if (!tokenRes.ok) throw new Error('Failed to authenticate');
+      const { token } = await tokenRes.json();
+
       const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/room/${roomToDelete._id}`, {
         method: 'DELETE',
-        credentials: 'include'
+        headers: {
+          'authorization': `Bearer ${token}`
+        },
+        credentials: 'include',
       });
+
       if (!res.ok) throw new Error('Failed to delete room');
+
       toast.success('Room listing deleted successfully!');
       setRooms(prev => prev.filter(r => r._id !== roomToDelete._id));
       setIsDeleteModalOpen(false);
@@ -103,7 +114,8 @@ export default function MyListingsPage() {
         capacity: parseInt(editFormData.capacity, 10),
       };
 
-      const { token } = await authClient.getToken();
+      const tokenRes = await fetch('/api/auth/token', { credentials: 'include' });
+      const { token } = await tokenRes.json();
       const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/room/${roomToEdit._id}`, {
         method: 'PATCH',
         headers: {
