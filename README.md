@@ -1,4 +1,6 @@
 # StudyNook – Library Study Room Booking
+<img width="1905" height="4618" alt="scrollshot-2026-06-05T10-50-21-UTC+06-00" src="https://github.com/user-attachments/assets/382de7e3-2b91-4367-bc14-14eaff1b62f5" />
+
 
 **Live Site URL**: https://study-nook-pi.vercel.app
 
